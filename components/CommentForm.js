@@ -2,42 +2,12 @@ import React, { useState } from 'react';
 import { TextInput, Text, View, Button, StyleSheet } from 'react-native';
 
 export const CommentForm = props => {
-  const [comment, setComment] = useState('');
-  const [placeInfo, setPlaceInfo] = useState(props);
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    fetch(URL, {
-      method: 'POST',
-      body: JSON.stringify({ comment }),
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(() => {
-        setComment('');
-      })
-      .catch(err => console.log('error', err));
-  };
+  const { message, like, createdAt, _id } = props.comments;
 
   return (
-    <>
-      <View styel={styles.container}>
-        <Text>{placeInfo.name}</Text>
-        <Text>Comment the babyroom</Text>
-        <TextInput
-          style={styles.input}
-          multiline
-          numberOfLines={3}
-          value={comment}
-          onChange={text => setComment(text)}
-        />
-
-        <Button
-          title="Send Comment"
-          onPress={handleSubmit}
-          //disabled={comment.length < 5 || comment.length > 140 ? true : false}
-        ></Button>
-      </View>
-    </>
+    <View>
+      <Text>{message}</Text>
+    </View>
   );
 };
 
@@ -46,7 +16,39 @@ export default CommentForm;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    width: 200,
-    backgroundColor: 'white'
+    marginTop: 20
+  },
+  text: {
+    fontSize: 20,
+    paddingBottom: 10
+  },
+  input: {
+    backgroundColor: 'white',
+    width: 300,
+    height: 40
   }
 });
+
+{
+  /* <>
+<View style={styles.container}>
+  <Text style={styles.text}>
+    What do you think about this babyroom?
+  </Text>
+  <Text style={styles.text}>Inform other parents</Text>
+  <TextInput
+    style={styles.input}
+    multiline
+    numberOfLines={3}
+    value={comment}
+    onChange={text => setComment(text)}
+  />
+
+  <Button
+    title="Send Comment"
+    onPress={handleSubmit}
+    //disabled={comment.length < 5 || comment.length > 140 ? true : false}
+  ></Button>
+</View>
+</> */
+}

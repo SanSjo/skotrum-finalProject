@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 2446,
+  "expoServerNgrokUrl": "https://zs-5wa.anonymous.skotrum-finalproject.exp.direct",
+  "packagerNgrokUrl": "https://packager.zs-5wa.anonymous.skotrum-finalproject.exp.direct",
+  "ngrokPid": 2458,
   "webpackServerPort": null
 }

@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView from 'react-native-maps';
-import { Text, Button } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  Button,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native';
 import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
 import { Header } from './Header';
+import Icon from 'react-native-elements';
+import { Comment } from './Comment';
 
 const Container = Styled.View`
     flex: 1;
@@ -26,7 +35,15 @@ export const Stockholm = ({ navigation }) => {
 
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const [region, setRegion] = useState({
+    latitude: 59.329323,
+    longitude: 18.068581,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.05
+  });
   const [error, setError] = useState(null);
+  const [openModal, setOpenModal] = useState(true);
+  const _isMounted = useRef(true);
 
   useEffect(() => {
     fetch('https://babyrooms.herokuapp.com/findBabyRooms')
@@ -35,22 +52,41 @@ export const Stockholm = ({ navigation }) => {
         setIsLoading(false);
         setMarkers(json);
       });
+    return () => {
+      _isMounted.current = false;
+    };
   }, []);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       position => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-        setError(null);
+        let region = {
+          latitude: parseFloat(position.coord.latitude),
+          longitude: parseFloat(position.coord.longitude),
+          latitudeDelta: 10,
+          longitudeDelta: 10
+        };
+        setRegion({
+          initialRegion: region
+        });
+        // setLatitude(position.coords.latitude);
+        // setLongitude(position.coords.longitude);
+
+        // setError(null);
       },
       error => setError({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 }
     );
   });
 
-  const handleCallotPress = () => {
-    return navigation.navigate('Comment');
+  const handleCalloutPress = () => {
+    return navigation.navigate('Comment', {
+      name: 'name'
+    });
+  };
+
+  const handleWebsitePress = () => {
+    return Linking.openURL(marker.website);
   };
 
   return (
@@ -58,14 +94,16 @@ export const Stockholm = ({ navigation }) => {
       <Header />
       <MapView
         style={{ flex: 1 }}
-        showsUserLocation
-        initialRegion={{
-          latitude: latitude,
-          longitude: longitude,
-          latitudeDelta: 0.015 * 6,
-          longitudeDelta: 0.0121 * 6,
-          zoom: 50
-        }}
+        showsUserLocation={true}
+        zoomControlEnabled={true}
+        initialRegion={region}
+        showsMyLocationButton={true}
+        // initialRegion={{
+        //   latitude: latitude,
+        //   longitude: longitude,
+        //   latitudeDelta: 0.5,
+        //   longitudeDelta: 0.28
+        // }}
       >
         {isLoading
           ? null
@@ -77,8 +115,6 @@ export const Stockholm = ({ navigation }) => {
                   longitude: marker.longitude
                 };
                 const metadata = `Status: ${marker.note}`;
-                const info = `Adress: ${marker.address}`;
-                console.log(marker);
 
                 return (
                   <MapView.Marker
@@ -86,27 +122,63 @@ export const Stockholm = ({ navigation }) => {
                     coordinate={coords}
                     title={marker.name}
                     description={metadata}
-                    information={info}
-                    onCalloutPress={handleCallotPress}
+                    onCalloutPress={handleCalloutPress}
                   >
-                    <MapView.Callout>
-                      <Container>
-                        <Text>{marker.name}</Text>
-                        <Text>{marker.phone}</Text>
-                        <Text>{marker.note}</Text>
+                    <MapView.Callout styel={styles.callout}>
+                      <Container style={styles.container}>
+                        <Text style={styles.textName}>{marker.name}</Text>
+
+                        {/* <Image
+                          style={styles.phoneIcon}
+                          source={require('../assets/phone-icon.png')}
+                        /> */}
+                        <Text style={styles.phone}> {marker.phone}</Text>
+                        <Text>{marker.address}</Text>
+                        <Text style={styles.note}>{marker.note}</Text>
+                        <TouchableOpacity onPress={() => handleWebsitePress()}>
+                          <Text style={styles.text}>{marker.website}</Text>
+                        </TouchableOpacity>
                       </Container>
-                      <Button title="More Info"></Button>
+                      <Button
+                        title="More Info"
+                        onPress={() => onCalloutPress()}
+                      ></Button>
                     </MapView.Callout>
                   </MapView.Marker>
                 );
               })}
-        <Button
-          title="Leave a comment"
-          onPress={() => navigation.navigate('Comment')}
-        ></Button>
       </MapView>
     </Container>
   );
 };
 
 export default Stockholm;
+
+const styles = StyleSheet.create({
+  container: {
+    marginLeft: 10,
+    flex: 1,
+    flexDirection: 'column',
+    width: 250,
+    height: 150
+  },
+  textName: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 18
+  },
+  text: {
+    color: 'red'
+  },
+  note: {
+    color: 'red'
+  },
+  phone: {
+    color: 'red'
+  },
+  phoneIcon: {
+    width: 1,
+    height: 1,
+    overlayColor: 'red'
+  }
+});
