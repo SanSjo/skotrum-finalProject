@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, View, TextInput, Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Styled from 'styled-components/native';
@@ -8,26 +8,36 @@ import { CommentHeader } from './CommentHeader';
 
 export const Comment = ({ navigation }) => {
   const [comment, setComment] = useState([]);
+  const [postComment, setPostComment] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8080/comment-babyrooms')
+    fetch('http://localhost:8080/')
       .then(res => res.json())
       .then(json => {
         setComment(json);
+      })
+      .catch(error => {
+        console.log('Api call error');
+        alert(error.message);
+        throw error;
       });
-  });
-  //fortsätt med fetch!!!!
-  const handleSubmit = event => {
+  }, [postComment]);
+
+  const handleSubmit = ({ event, comment }) => {
     event.preventDefault();
     fetch(URL, {
       method: 'POST',
       body: JSON.stringify({ comment }),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(() => {
-        setComment('');
+      .catch(error => {
+        console.log('error:' + error.message);
+        alert('try again');
+        throw error;
       })
-      .catch(err => console.log('error', err));
+      .then(() => {
+        setPostComment(message);
+      });
   };
 
   return (
@@ -54,11 +64,9 @@ export const Comment = ({ navigation }) => {
           ></Button>
         </View>
 
-        <View>
-          {comment.map(comm => (
-            <CommentForm key={comm._id} comm={comments} />
-          ))}
-        </View>
+        {comment.map(comm => (
+          <CommentForm key={comm._id} comm={comments} />
+        ))}
       </>
     </View>
   );

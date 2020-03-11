@@ -1,19 +1,21 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
+import { Gbg } from './Gbg';
 
-export const Header = () => {
+export const Header = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Button
         style={styles.button}
         title="Malmö"
-        onPress={() => navigation.navigate('Malmo')}
+        onPress={() => navigation.navigate('Malmö')}
       ></Button>
+
       <Button
         style={styles.button}
         title="Göteborg"
-        onPress={() => navigation.navigate('Goteborg')}
+        onPress={() => navigation.navigate('Gbg')}
       ></Button>
     </View>
   );

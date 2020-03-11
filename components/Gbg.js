@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MapView from 'react-native-maps';
+import MapView, { AnimatedRegion } from 'react-native-maps';
 import {
   Text,
   View,
@@ -16,26 +16,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Comment } from './Comment';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { AppRegistry } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Callout } from './Callout';
 
-export const Stockholm = () => {
+export const Gbg = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
-
-  const [error, setError] = useState(null);
-  // const [openModal, setOpenModal] = useState(true);
-
   const _isMounted = useRef(true);
-
-  map = null;
-
   const region = {
-    latitude: 59.329323,
-    longitude: 18.068581,
+    latitude: 57.69699,
+    longitude: 11.9865,
     latitudeDelta: 0.12,
     longitudeDelta: 0.12
   };
+
+  map = null;
 
   const controller = new AbortController();
   const signal = controller.signal;
@@ -43,7 +36,7 @@ export const Stockholm = () => {
   let mapRef = useRef(null);
 
   useEffect(() => {
-    fetch('https://babyrooms.herokuapp.com/findBabyRooms', { signal })
+    fetch('https://babyrooms.herokuapp.com/gbgBabyRooms', { signal })
       .then(res => res.json())
       .then(json => {
         setIsLoading(false);
@@ -57,7 +50,7 @@ export const Stockholm = () => {
   const handleCalloutPress = () => {
     controller.abort();
     return navigation.navigate('Comment', {
-      id: 'id'
+      name: 'name'
     });
   };
 
@@ -66,11 +59,9 @@ export const Stockholm = () => {
     return Linking.openURL(webpage.website);
   };
 
-  const navigation = useNavigation();
-
   return (
     <Container>
-      <Header navigation={navigation} />
+      <Header />
 
       <MapView
         style={{ flex: 1 }}
@@ -81,7 +72,6 @@ export const Stockholm = () => {
         zoomControlEnabled={true}
         initialRegion={region}
         showsMyLocationButton={true}
-        onCalloutPress={handleCalloutPress}
       >
         {isLoading
           ? null
@@ -98,11 +88,9 @@ export const Stockholm = () => {
                     key={index}
                     coordinate={coords}
                     title={marker.name}
+                    onCalloutPress={handleCalloutPress}
                   >
-                    <MapView.Callout
-                      style={styles.callout}
-                      navigation={navigation}
-                    >
+                    <MapView.Callout styel={styles.callout}>
                       <View style={styles.container}>
                         <Text style={styles.textName}>{marker.name}</Text>
 
@@ -117,10 +105,9 @@ export const Stockholm = () => {
                         </TouchableOpacity>
                         <Button
                           title="More Info"
-                          onPress={() => navigation.navigate('Comment', {})}
+                          onPress={() => handleCalloutPress()}
                         />
                       </View>
-                      {/* <Callout navigation={navigation} marker={marker} /> */}
                     </MapView.Callout>
                   </MapView.Marker>
                 );
@@ -134,7 +121,7 @@ export const Stockholm = () => {
   );
 };
 
-export default Stockholm;
+export default Gbg;
 
 const Container = Styled.View`
     flex: 1;
@@ -169,44 +156,3 @@ const styles = StyleSheet.create({
     overlayColor: 'red'
   }
 });
-
-// const [region, setRegion] = useState({
-//   latitude: 59.329323,
-//   longitude: 18.068581,
-//   latitudeDelta: 0.12,
-//   longitudeDelta: 0.12
-// });
-
-// useEffect(() => {
-//   navigator.geolocation.getCurrentPosition(
-//     position => {
-//       let region = {
-//         latitude: position.coord.latitude,
-//         longitude: position.coord.longitude,
-//         latitudeDelta: 10,
-//         longitudeDelta: 10
-//       };
-//       setRegion({
-//         initialRegion: region
-//       });
-
-//       ////////////
-//       // setLatitude(position.coords.latitude);
-//       // setLongitude(position.coords.longitude);
-
-//       // setError(null);
-//     },
-//     error => setError({ error: error.message }),
-//     { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 }
-//   );
-// });
-
-// onRegionChange = region => {
-//   setRegion({ region });
-// };
-
-// onMapReady = e => {
-//   if (!ready) {
-//     setReady(true);
-//   }
-// };

@@ -11,7 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeRouter, Route, Switch, Link } from 'react-router-native';
 import { Comment } from './components/Comment';
 import { Stockholm } from './components/Stockholm';
-import { Header } from './components/Header';
+
+import { Gbg } from './components/Gbg';
 
 const Container = Styled.View`
     height: 200px;
@@ -25,6 +26,7 @@ const MyStack = () => {
     <Stack.Navigator>
       <Stack.Screen name="Stockholm" component={Stockholm} />
       <Stack.Screen name="Comment" component={Comment} />
+      <Stack.Screen name="Gbg" component={Gbg} />
     </Stack.Navigator>
   );
 };
