@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, View, TextInput, Text, StyleSheet } from 'react-native';
+import { Button, View, TextInput, Text, StyleSheet, Share } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Styled from 'styled-components/native';
 
@@ -40,6 +40,26 @@ export const Comment = ({ route }) => {
       });
   };
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: 'Här finns det skötbord'
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <View>
       <CommentHeader />
@@ -69,6 +89,7 @@ export const Comment = ({ route }) => {
           <CommentForm comment={comments} />
         ))}
       </>
+      <Button onPress={onShare} title="Share" />
     </View>
   );
 };

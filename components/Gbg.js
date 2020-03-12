@@ -120,10 +120,10 @@ export const Gbg = () => {
                   </MapView.Marker>
                 );
               })}
-        <Button
+        {/* <Button
           title="Current Location"
           onPress={() => handleWebsitePress()}
-        ></Button>
+        ></Button> */}
       </MapView>
     </Container>
   );

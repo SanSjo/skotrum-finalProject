@@ -10,7 +10,8 @@ import {
   Dimensions,
   Card,
   IconButton,
-  Colors
+  Colors,
+  Share
 } from 'react-native';
 import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
@@ -64,6 +65,32 @@ export const Stockholm = ({ navigation }) => {
     });
   };
 
+  const getImageToShare = skotrumId => {
+    const skotrum = skotrum.find(room => room.id === skotrumId);
+    return skotrum.name && skotrum.address;
+  };
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: 'Här finns det skötbord',
+        url: getImageToShare()
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const goToCurrentLocation = () => {};
 
   // const handleWebsitePress = webId => {
@@ -106,7 +133,7 @@ export const Stockholm = ({ navigation }) => {
                       style={styles.callout}
                       navigation={navigation}
                     >
-                      <View style={styles.container}>
+                      <View style={styles.container} key={marker._id}>
                         <Text style={styles.textName}>{marker.name}</Text>
 
                         <Text style={styles.phone}>
@@ -132,10 +159,16 @@ export const Stockholm = ({ navigation }) => {
                         {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
                           <Text style={styles.text}> {marker.website}</Text>
                         </TouchableOpacity> */}
-                        <Button
-                          title="More Info"
-                          onPress={() => navigation.navigate('Comment', {})}
-                        />
+                        <View style={styles.buttonContainer}>
+                          <Button
+                            title="More info"
+                            onPress={() => navigation.navigate('Comment', {})}
+                          />
+                          <Button
+                            title="Share"
+                            onPress={() => onShare(marker.id)}
+                          />
+                        </View>
                       </View>
                       {/* <Callout navigation={navigation} marker={marker} />*/}
                     </MapView.Callout>
@@ -143,10 +176,10 @@ export const Stockholm = ({ navigation }) => {
                 );
               })}
 
-        <Button
+        {/* <Button
           title="Current Location"
           onPress={() => goToCurrentLocation()}
-        ></Button>
+        ></Button> */}
       </MapView>
     </Container>
   );
@@ -190,9 +223,15 @@ const styles = StyleSheet.create({
     color: 'red',
     paddingBottom: 10
   },
-  icon: {},
   callout: {
     backgroundColor: 'transparent'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  button: {
+    color: 'black'
   }
 });
 

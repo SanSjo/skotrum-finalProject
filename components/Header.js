@@ -25,18 +25,24 @@ export const Header = () => {
       <View style={styles.buttonContainer}>
         <Button
           style={styles.button}
+          title="Göteborg"
+          onPress={() => navigation.navigate('Gbg')}
+        >
+          Göteborg
+        </Button>
+        <Button
+          style={styles.button}
           title="Malmö"
           onPress={() => navigation.navigate('Malmo')}
         >
           Malmö
         </Button>
-
         <Button
           style={styles.button}
-          title="Göteborg"
-          onPress={() => navigation.navigate('Gbg')}
+          title="Stockholm"
+          onPress={() => navigation.navigate('Stockholm')}
         >
-          Göteborg
+          Stockholm
         </Button>
       </View>
     </Appbar.Header>
@@ -45,12 +51,12 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     height: 70
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginLeft: 120
+    marginLeft: 40
   },
   button: {
     color: 'white'
