@@ -18,13 +18,13 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { AppRegistry } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export const Gbg = () => {
+export const Malmo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
   const _isMounted = useRef(true);
   const region = {
-    latitude: 57.69699,
-    longitude: 11.9865,
+    latitude: 55.60498,
+    longitude: 13.003822,
     latitudeDelta: 0.12,
     longitudeDelta: 0.12
   };
@@ -37,7 +37,7 @@ export const Gbg = () => {
   let mapRef = useRef(null);
 
   useEffect(() => {
-    fetch('https://babyrooms.herokuapp.com/gbgBabyRooms', { signal })
+    fetch('https://babyrooms.herokuapp.com/malmoBabyRooms', { signal })
       .then(res => res.json())
       .then(json => {
         setIsLoading(false);
@@ -59,7 +59,9 @@ export const Gbg = () => {
     const webpage = markers.find(p => p.id === webId);
     return Linking.openURL(webpage.website);
   };
+
   const navigation = useNavigation();
+
   return (
     <Container>
       <Header navigation={navigation} />
@@ -101,7 +103,8 @@ export const Gbg = () => {
                           {marker.phone}
                         </Text>
                         <Text style={styles.adress}>
-                          <Icon name="envelope" size={15} color="red" />{' '}
+                          <Icon name="envelope" size={15} color="red" />
+                          {'  '}
                           {marker.address}
                         </Text>
                         <Text style={styles.note}>
@@ -129,7 +132,7 @@ export const Gbg = () => {
   );
 };
 
-export default Gbg;
+export default Malmo;
 
 const Container = Styled.View`
     flex: 1;

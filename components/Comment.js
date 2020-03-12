@@ -6,15 +6,15 @@ import Styled from 'styled-components/native';
 import { CommentForm } from './CommentForm';
 import { CommentHeader } from './CommentHeader';
 
-export const Comment = ({ navigation }) => {
-  const [comment, setComment] = useState([]);
+export const Comment = ({ route }) => {
+  const [comments, setComments] = useState([]);
   const [postComment, setPostComment] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8080/')
+    fetch('https://babyrooms.herokuapp.com/')
       .then(res => res.json())
       .then(json => {
-        setComment(json);
+        setComments(json);
       })
       .catch(error => {
         console.log('Api call error');
@@ -23,11 +23,11 @@ export const Comment = ({ navigation }) => {
       });
   }, [postComment]);
 
-  const handleSubmit = ({ event, comment }) => {
+  const handleSubmit = ({ event, comments }) => {
     event.preventDefault();
     fetch(URL, {
       method: 'POST',
-      body: JSON.stringify({ comment }),
+      body: JSON.stringify({ comments }),
       headers: { 'Content-Type': 'application/json' }
     })
       .catch(error => {
@@ -36,7 +36,7 @@ export const Comment = ({ navigation }) => {
         throw error;
       })
       .then(() => {
-        setPostComment(message);
+        setPostComment(comments);
       });
   };
 
@@ -46,15 +46,16 @@ export const Comment = ({ navigation }) => {
       <>
         <View style={styles.container}>
           <Text style={styles.text}>
-            What do you think about this babyroom?
+            What do you think about {route.params.name} babyroom?
           </Text>
+
           <Text style={styles.text}>Inform other parents</Text>
           <TextInput
             style={styles.input}
             multiline
             numberOfLines={3}
-            value={comment}
-            onChange={text => setComment(text)}
+            value={comments}
+            onChange={text => setComments(text)}
           />
 
           <Button
@@ -64,8 +65,8 @@ export const Comment = ({ navigation }) => {
           ></Button>
         </View>
 
-        {comment.map(comm => (
-          <CommentForm key={comm._id} comm={comments} />
+        {comments.map(comment => (
+          <CommentForm comment={comments} />
         ))}
       </>
     </View>

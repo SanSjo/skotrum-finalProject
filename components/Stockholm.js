@@ -7,7 +7,10 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Card,
+  IconButton,
+  Colors
 } from 'react-native';
 import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
@@ -19,7 +22,7 @@ import { AppRegistry } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Callout } from './Callout';
 
-export const Stockholm = () => {
+export const Stockholm = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
 
@@ -57,16 +60,16 @@ export const Stockholm = () => {
   const handleCalloutPress = () => {
     controller.abort();
     return navigation.navigate('Comment', {
-      id: 'id'
+      title: markers.name
     });
   };
 
-  const handleWebsitePress = webId => {
-    const webpage = markers.find(p => p.id === webId);
-    return Linking.openURL(webpage.website);
-  };
+  const goToCurrentLocation = () => {};
 
-  const navigation = useNavigation();
+  // const handleWebsitePress = webId => {
+  //   const webpage = markers.find(p => p.id === webId);
+  //   return Linking.openURL(webpage.website);
+  // };
 
   return (
     <Container>
@@ -107,27 +110,42 @@ export const Stockholm = () => {
                         <Text style={styles.textName}>{marker.name}</Text>
 
                         <Text style={styles.phone}>
-                          <Icon name="phone" size={20} color="red" />{' '}
+                          <Icon name="phone" size={20} color="red" />
+                          {'  '}
                           {marker.phone}
                         </Text>
-                        <Text>{marker.address}</Text>
-                        <Text style={styles.note}>{marker.note}</Text>
-                        <TouchableOpacity onPress={() => handleWebsitePress()}>
+                        <Text style={styles.adress}>
+                          <Icon
+                            style={styles.icon}
+                            name="envelope"
+                            size={15}
+                            color="red"
+                          />
+                          {'  '}
+                          {marker.address}
+                        </Text>
+                        <Text style={styles.note}>
+                          <Icon name="check" size={20} color="red" />{' '}
+                          {marker.note}
+                        </Text>
+
+                        {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
                           <Text style={styles.text}> {marker.website}</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <Button
                           title="More Info"
                           onPress={() => navigation.navigate('Comment', {})}
                         />
                       </View>
-                      {/* <Callout navigation={navigation} marker={marker} /> */}
+                      {/* <Callout navigation={navigation} marker={marker} />*/}
                     </MapView.Callout>
                   </MapView.Marker>
                 );
               })}
+
         <Button
           title="Current Location"
-          onPress={() => handleWebsitePress()}
+          onPress={() => goToCurrentLocation()}
         ></Button>
       </MapView>
     </Container>
@@ -146,27 +164,35 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 1,
     flexDirection: 'column',
-    width: 250,
-    height: 150
+    width: 270,
+    height: 170
   },
   textName: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 18
+    fontSize: 18,
+    paddingBottom: 10
   },
   text: {
-    color: 'red'
+    color: 'red',
+    paddingBottom: 10
   },
   note: {
-    color: 'red'
+    color: 'red',
+    paddingBottom: 10
   },
   phone: {
-    color: 'red'
+    color: 'red',
+    paddingBottom: 10
   },
-  phoneIcon: {
-    width: 1,
-    height: 1,
-    overlayColor: 'red'
+
+  adress: {
+    color: 'red',
+    paddingBottom: 10
+  },
+  icon: {},
+  callout: {
+    backgroundColor: 'transparent'
   }
 });
 

@@ -15,16 +15,21 @@ export const Callout = props => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.textName}>{name}</Text>
+      <Text style={styles.textName}>{marker.name}</Text>
 
       <Text style={styles.phone}>
-        <Icon name="phone" size={20} color="red" /> {phone}
+        <Icon name="phone" size={20} color="red" />
+        {'  '}
+        {marker.phone}
       </Text>
-      <Text>{address}</Text>
-      <Text style={styles.note}>{note}</Text>
-      <TouchableOpacity onPress={() => handleWebsitePress()}>
-        <Text style={styles.text}> {website}</Text>
-      </TouchableOpacity>
+      <Text style={styles.adress}>
+        <Icon style={styles.icon} name="envelope" size={15} color="red" />
+        {'  '}
+        {marker.address}
+      </Text>
+      <Text style={styles.note}>
+        <Icon name="check" size={20} color="red" /> {marker.note}
+      </Text>
       <Button
         title="More Info"
         onPress={() => navigation.navigate('Comment')}
@@ -39,26 +44,31 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 1,
     flexDirection: 'column',
-    width: 250,
-    height: 150
+    width: 270,
+    height: 170
   },
   textName: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 18
+    fontSize: 18,
+    paddingBottom: 10
   },
   text: {
-    color: 'red'
+    color: 'red',
+    paddingBottom: 10
   },
   note: {
-    color: 'red'
+    color: 'red',
+    paddingBottom: 10
   },
   phone: {
-    color: 'red'
+    color: 'red',
+    paddingBottom: 10
   },
-  phoneIcon: {
-    width: 1,
-    height: 1,
-    overlayColor: 'red'
-  }
+
+  adress: {
+    color: 'red',
+    paddingBottom: 10
+  },
+  icon: {}
 });

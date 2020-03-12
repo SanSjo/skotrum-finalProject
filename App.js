@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeRouter, Route, Switch, Link } from 'react-router-native';
 import { Comment } from './components/Comment';
 import { Stockholm } from './components/Stockholm';
-
+import { Malmo } from './components/Malmo';
 import { Gbg } from './components/Gbg';
 
 const Container = Styled.View`
@@ -24,7 +24,12 @@ const Stack = createStackNavigator();
 const MyStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Stockholm" component={Stockholm} />
+      <Stack.Screen
+        image="../assets/logomini.app.jpg"
+        name="Stockholm"
+        component={Stockholm}
+      />
+      <Stack.Screen name="Malmo" component={Malmo} />
       <Stack.Screen name="Comment" component={Comment} />
       <Stack.Screen name="Gbg" component={Gbg} />
     </Stack.Navigator>
