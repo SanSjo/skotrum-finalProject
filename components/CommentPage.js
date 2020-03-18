@@ -6,8 +6,9 @@ import Styled from 'styled-components/native';
 import { CommentForm } from './CommentForm';
 import { CommentHeader } from './CommentHeader';
 import { Comments } from './Comments'
+import { ScrollView } from 'react-native-gesture-handler';
 
-export const CommentPage = ({ route }) => {
+export const CommentPage = () => {
   const [comments, setComments] = useState([]);
   const [postComment, setPostComment] = useState('');
 
@@ -39,61 +40,23 @@ export const CommentPage = ({ route }) => {
     setComments(updatedComments)
   }
 
-  // const handleSubmit = ({ event, comments }) => {
-  //   event.preventDefault();
-  //   fetch(URL, {
-  //     method: 'POST',
-  //     body: JSON.stringify({ comments }),
-  //     headers: { 'Content-Type': 'application/json' }
-  //   })
-  //     .catch(error => {
-  //       console.log('error:' + error.message);
-  //       alert('try again');
-  //       throw error;
-  //     })
-  //     .then(() => {
-  //       setPostComment(comments);
-  //     });
-  // };
-
-  // console.log('route', route);
-  // const onShare = async () => {
-  //   try {
-  //     const result = await Share.share({
-  //       message: 'Här finns det skötbord'
-  //     });
-
-  //     if (result.action === Share.sharedAction) {
-  //       if (result.activityType) {
-  //         // shared with activity type of result.activityType
-  //       } else {
-  //         // shared
-  //       }
-  //     } else if (result.action === Share.dismissedAction) {
-  //       // dismissed
-  //     }
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // };
-
 
 
 
 
   return (
-    <View>
+    <ScrollView>
       <CommentHeader />
       <>
         <View style={styles.container}>
           <CommentForm onFormSubmit={onFormSubmit} />
         </View>
         {comments.map(comment => (
-          <Comments key={comment._id} comment={comment} onLiked={onLiked} />
+          <Comments key={comment._id} com={comment} onLiked={onLiked} />
         ))}
       </>
       {/* <Button onPress={onShare} title="Share" /> */}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -114,6 +77,11 @@ const styles = StyleSheet.create({
     height: 40
   }
 });
+
+
+
+
+/////////////
 
 // const styles = StyleSheet.create({
 //   container: {

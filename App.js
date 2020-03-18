@@ -36,6 +36,7 @@ const MyStack = () => {
       <Stack.Screen name="Gbg" component={Gbg} />
       <Stack.Screen name="DetailPage" component={DetailPage} />
       <Stack.Screen name="InfoPage" component={InfoPage} />
+
       {/* <Stack.Screen name="InfoModal" component={InfoModal} /> */}
 
     </Stack.Navigator>

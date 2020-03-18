@@ -85,11 +85,6 @@ export const Stockholm = ({ navigation }) => {
     }
   };
 
-  const makeCall = (phoneCall) => {
-    Communications.phonecall(phoneCall, true);
-
-  }
-
 
   const handleGetDirection = (marker) => {
     console.log(marker)

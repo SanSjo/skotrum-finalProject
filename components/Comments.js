@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Footer, Button } from 'react-native'
 import moment from 'moment'
 
 export const Comments = (props) => {
-  const { comment, like, createdAt, _id } = props.comment
+  const { comment, like, createdAt, _id } = props.com
 
   const handleClick = () => {
     fetch(`https://babyrooms.herokuapp.com/${_id}/like`, {

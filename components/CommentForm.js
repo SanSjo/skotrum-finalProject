@@ -6,41 +6,11 @@ export const CommentForm = (props) => {
   const [comment, setComment] = useState('')
 
 
-  // const getCircularReplacer = () => {
-  //   const seen = new WeakSet();
-  //   return (key, value) => {
-  //     if (typeof value === comment && value !== null) {
-  //       if (seen.has(value)) {
-  //         return;
-  //       }
-  //       seen.add(value);
-  //     }
-  //     return value;
-  //   };
-  // };
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   fetch('https://babyrooms.herokuapp.com/', {
-  //     method: "POST",
-  //     body: JSON.stringify(getCircularReplacer()),
-  //     headers: { "Content-Type": "application/json" }
-  //   })
-  //     .then(() => {
-  //       setComment('')
-  //       props.onFormSubmit(comment)
-  //     })
-  //     .catch(error => {
-  //       console.log('error:' + error.message);
-  //       alert('try again');
-  //       throw error;
-  //     })
-  // };
 
   const getCircularReplacer = () => {
     const seen = new WeakSet();
     return (key, value) => {
-      if (typeof value === comment && value !== null) {
+      if (typeof value === "object" && value !== null) {
         if (seen.has(value)) {
           return;
         }
@@ -54,7 +24,7 @@ export const CommentForm = (props) => {
     event.preventDefault();
     fetch(`https://babyrooms.herokuapp.com/`, {
       method: "POST",
-      body: JSON.stringify(getCircularReplacer()),
+      body: JSON.stringify(getCircularReplacer),
       headers: { "Content-Type": "application/json" }
     })
       .then(() => {
@@ -76,7 +46,6 @@ export const CommentForm = (props) => {
           style={styles.input}
           multiline
           numberOfLines={3}
-          value={comment}
           onChange={text => setComment(text)}
         />
 
@@ -91,6 +60,7 @@ export const CommentForm = (props) => {
     );
   };
 
+  export default CommentForm
 
 
 
@@ -110,6 +80,8 @@ export const CommentForm = (props) => {
       height: 40
     }
   });
+
+/////////////
 
 
     /* <>
