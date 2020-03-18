@@ -7,13 +7,14 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Share
 } from 'react-native';
 import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
 import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Comment } from './Comment';
+import { CommentPage } from './CommentPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { AppRegistry } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -48,16 +49,36 @@ export const Malmo = () => {
     };
   }, []);
 
-  const handleCalloutPress = () => {
+  const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('Comment', {
-      name: 'name'
-    });
+    return navigation.navigate('CommentPage', selectedMarker);
   };
 
-  const handleWebsitePress = webId => {
-    const webpage = markers.find(p => p.id === webId);
-    return Linking.openURL(webpage.website);
+  // const handleWebsitePress = webId => {
+  //   const webpage = markers.find(p => p.id === webId);
+  //   return Linking.openURL(webpage.website);
+  // };
+
+  const onShare = async marker => {
+    console.log('marker', marker);
+    try {
+      const result = await Share.share({
+        message: `Här finns det skötbord: ${marker.name} - ${marker.address}`,
+        url: marker.website
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const navigation = useNavigation();
@@ -79,50 +100,59 @@ export const Malmo = () => {
         {isLoading
           ? null
           : markers
-              .filter(marker => marker.latitude && marker.longitude)
-              .map((marker, index) => {
-                const coords = {
-                  latitude: marker.latitude,
-                  longitude: marker.longitude
-                };
+            .filter(marker => marker.latitude && marker.longitude)
+            .map((marker, index) => {
+              const coords = {
+                latitude: marker.latitude,
+                longitude: marker.longitude
+              };
 
-                return (
-                  <MapView.Marker
-                    key={index}
-                    coordinate={coords}
-                    title={marker.name}
-                    onCalloutPress={handleCalloutPress}
-                  >
-                    <MapView.Callout styel={styles.callout}>
-                      <View style={styles.container}>
-                        <Text style={styles.textName}>{marker.name}</Text>
+              return (
+                <MapView.Marker
+                  key={index}
+                  coordinate={coords}
+                  title={marker.name}
 
-                        <Text style={styles.phone}>
-                          <Icon name="phone" size={20} color="red" />
-                          {'  '}
-                          {marker.phone}
-                        </Text>
-                        <Text style={styles.adress}>
-                          <Icon name="envelope" size={15} color="red" />
-                          {'  '}
-                          {marker.address}
-                        </Text>
-                        <Text style={styles.note}>
-                          <Icon name="check" size={20} color="red" />{' '}
-                          {marker.note}
-                        </Text>
-                        {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
+                >
+                  <MapView.Callout styel={styles.callout}>
+                    <View style={styles.container}>
+                      <Text style={styles.textName}>{marker.name}</Text>
+
+                      <Text style={styles.phone}>
+                        <Icon name="phone" size={20} color="red" />
+                        {'  '}
+                        {marker.phone}
+                      </Text>
+                      <Text style={styles.adress}>
+                        <Icon name="envelope" size={15} color="red" />
+                        {'  '}
+                        {marker.address}
+                      </Text>
+                      <Text style={styles.note}>
+                        <Icon name="check" size={20} color="red" />{' '}
+                        {marker.note}
+                      </Text>
+                      {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
                           <Text style={styles.text}> {marker.website}</Text>
                         </TouchableOpacity> */}
-                        <Button
-                          title="More Info"
-                          onPress={() => handleCalloutPress()}
-                        />
+                      <View style={styles.buttonContainer}>
+                        <MapView.CalloutSubview
+                          onPress={() => handleCalloutPress(marker)}
+                        >
+                          <Text>MORE INFO</Text>
+                        </MapView.CalloutSubview>
+
+                        <MapView.CalloutSubview
+                          onPress={() => onShare(marker)}
+                        >
+                          <Text>SHARE</Text>
+                        </MapView.CalloutSubview>
                       </View>
-                    </MapView.Callout>
-                  </MapView.Marker>
-                );
-              })}
+                    </View>
+                  </MapView.Callout>
+                </MapView.Marker>
+              );
+            })}
         {/* <Button
           title="Current Location"
           onPress={() => handleWebsitePress()}

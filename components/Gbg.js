@@ -13,7 +13,7 @@ import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
 import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Comment } from './Comment';
+import { CommentPage } from './CommentPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { AppRegistry } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -50,7 +50,7 @@ export const Gbg = () => {
 
   const handleCalloutPress = () => {
     controller.abort();
-    return navigation.navigate('Comment', {
+    return navigation.navigate('CommentPage', {
       name: 'name'
     });
   };
@@ -77,49 +77,49 @@ export const Gbg = () => {
         {isLoading
           ? null
           : markers
-              .filter(marker => marker.latitude && marker.longitude)
-              .map((marker, index) => {
-                const coords = {
-                  latitude: marker.latitude,
-                  longitude: marker.longitude
-                };
+            .filter(marker => marker.latitude && marker.longitude)
+            .map((marker, index) => {
+              const coords = {
+                latitude: marker.latitude,
+                longitude: marker.longitude
+              };
 
-                return (
-                  <MapView.Marker
-                    key={index}
-                    coordinate={coords}
-                    title={marker.name}
-                    onCalloutPress={handleCalloutPress}
-                  >
-                    <MapView.Callout styel={styles.callout}>
-                      <View style={styles.container}>
-                        <Text style={styles.textName}>{marker.name}</Text>
+              return (
+                <MapView.Marker
+                  key={index}
+                  coordinate={coords}
+                  title={marker.name}
+                  onCalloutPress={handleCalloutPress}
+                >
+                  <MapView.Callout styel={styles.callout}>
+                    <View style={styles.container}>
+                      <Text style={styles.textName}>{marker.name}</Text>
 
-                        <Text style={styles.phone}>
-                          <Icon name="phone" size={20} color="red" />
-                          {'  '}
-                          {marker.phone}
-                        </Text>
-                        <Text style={styles.adress}>
-                          <Icon name="envelope" size={15} color="red" />{' '}
-                          {marker.address}
-                        </Text>
-                        <Text style={styles.note}>
-                          <Icon name="check" size={20} color="red" />{' '}
-                          {marker.note}
-                        </Text>
-                        {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
+                      <Text style={styles.phone}>
+                        <Icon name="phone" size={20} color="red" />
+                        {'  '}
+                        {marker.phone}
+                      </Text>
+                      <Text style={styles.adress}>
+                        <Icon name="envelope" size={15} color="red" />{' '}
+                        {marker.address}
+                      </Text>
+                      <Text style={styles.note}>
+                        <Icon name="check" size={20} color="red" />{' '}
+                        {marker.note}
+                      </Text>
+                      {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
                           <Text style={styles.text}> {marker.website}</Text>
                         </TouchableOpacity> */}
-                        <Button
-                          title="More Info"
-                          onPress={() => handleCalloutPress()}
-                        />
-                      </View>
-                    </MapView.Callout>
-                  </MapView.Marker>
-                );
-              })}
+                      <Button
+                        title="More Info"
+                        onPress={() => handleCalloutPress()}
+                      />
+                    </View>
+                  </MapView.Callout>
+                </MapView.Marker>
+              );
+            })}
         {/* <Button
           title="Current Location"
           onPress={() => handleWebsitePress()}

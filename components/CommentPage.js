@@ -5,13 +5,15 @@ import Styled from 'styled-components/native';
 
 import { CommentForm } from './CommentForm';
 import { CommentHeader } from './CommentHeader';
+import { Comments } from './Comments'
 
-export const Comment = ({ route }) => {
+export const CommentPage = ({ route }) => {
   const [comments, setComments] = useState([]);
   const [postComment, setPostComment] = useState('');
 
+
   useEffect(() => {
-    fetch('https://babyrooms.herokuapp.com/')
+    fetch(`https://babyrooms.herokuapp.com/`)
       .then(res => res.json())
       .then(json => {
         setComments(json);
@@ -23,78 +25,79 @@ export const Comment = ({ route }) => {
       });
   }, [postComment]);
 
-  const handleSubmit = ({ event, comments }) => {
-    event.preventDefault();
-    fetch(URL, {
-      method: 'POST',
-      body: JSON.stringify({ comments }),
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .catch(error => {
-        console.log('error:' + error.message);
-        alert('try again');
-        throw error;
-      })
-      .then(() => {
-        setPostComment(comments);
-      });
-  };
+  const onFormSubmit = message => {
+    setPostComment(message)
+  }
 
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: 'Här finns det skötbord'
-      });
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
+  const onLiked = commentId => {
+    const updatedComments = comments.map(comment => {
+      if (comment._id === commentId) {
+        comment.like += 1
       }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+      return comment
+    })
+    setComments(updatedComments)
+  }
+
+  // const handleSubmit = ({ event, comments }) => {
+  //   event.preventDefault();
+  //   fetch(URL, {
+  //     method: 'POST',
+  //     body: JSON.stringify({ comments }),
+  //     headers: { 'Content-Type': 'application/json' }
+  //   })
+  //     .catch(error => {
+  //       console.log('error:' + error.message);
+  //       alert('try again');
+  //       throw error;
+  //     })
+  //     .then(() => {
+  //       setPostComment(comments);
+  //     });
+  // };
+
+  // console.log('route', route);
+  // const onShare = async () => {
+  //   try {
+  //     const result = await Share.share({
+  //       message: 'Här finns det skötbord'
+  //     });
+
+  //     if (result.action === Share.sharedAction) {
+  //       if (result.activityType) {
+  //         // shared with activity type of result.activityType
+  //       } else {
+  //         // shared
+  //       }
+  //     } else if (result.action === Share.dismissedAction) {
+  //       // dismissed
+  //     }
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
+
+
+
+
 
   return (
     <View>
       <CommentHeader />
       <>
         <View style={styles.container}>
-          <Text style={styles.text}>
-            What do you think about {route.params.name} babyroom?
-          </Text>
-
-          <Text style={styles.text}>Inform other parents</Text>
-          <TextInput
-            style={styles.input}
-            multiline
-            numberOfLines={3}
-            value={comments}
-            onChange={text => setComments(text)}
-          />
-
-          <Button
-            title="Send Comment"
-            onPress={handleSubmit}
-            //disabled={comment.length < 5 || comment.length > 140 ? true : false}
-          ></Button>
+          <CommentForm onFormSubmit={onFormSubmit} />
         </View>
-
         {comments.map(comment => (
-          <CommentForm comment={comments} />
+          <Comments key={comment._id} comment={comment} onLiked={onLiked} />
         ))}
       </>
-      <Button onPress={onShare} title="Share" />
+      {/* <Button onPress={onShare} title="Share" /> */}
     </View>
   );
 };
 
-export default Comment;
+export default CommentPage;
 
 const styles = StyleSheet.create({
   container: {

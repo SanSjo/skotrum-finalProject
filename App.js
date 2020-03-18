@@ -2,17 +2,19 @@ import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import Styled from 'styled-components/native';
 import MapView from 'react-native-maps';
-import { InfoModal } from './components/InfoModal';
 import { Text, Button, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 // using ES6 modules
 import { NativeRouter, Route, Switch, Link } from 'react-router-native';
-import { Comment } from './components/Comment';
+import { CommentPage } from './components/CommentPage';
 import { Stockholm } from './components/Stockholm';
 import { Malmo } from './components/Malmo';
 import { Gbg } from './components/Gbg';
+import { InfoModal } from './components/InfoModal';
+import { DetailPage } from './components/DetailPage'
+import { InfoPage } from './components/InfoPage'
 
 const Container = Styled.View`
     height: 200px;
@@ -30,8 +32,12 @@ const MyStack = () => {
         component={Stockholm}
       />
       <Stack.Screen name="Malmo" component={Malmo} />
-      <Stack.Screen name="Comment" component={Comment} />
+      <Stack.Screen name="CommentPage" component={CommentPage} />
       <Stack.Screen name="Gbg" component={Gbg} />
+      <Stack.Screen name="DetailPage" component={DetailPage} />
+      <Stack.Screen name="InfoPage" component={InfoPage} />
+      {/* <Stack.Screen name="InfoModal" component={InfoModal} /> */}
+
     </Stack.Navigator>
   );
 };

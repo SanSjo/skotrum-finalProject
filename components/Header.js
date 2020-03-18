@@ -23,27 +23,27 @@ export const Header = () => {
         source={require('../assets/logomini-app.jpg')}
       />
       <View style={styles.buttonContainer}>
-        <Button
-          style={styles.button}
+        <TouchableOpacity
+
           title="Göteborg"
           onPress={() => navigation.navigate('Gbg')}
         >
-          Göteborg
-        </Button>
-        <Button
-          style={styles.button}
+          <Text style={styles.button}>Göteborg</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+
           title="Malmö"
           onPress={() => navigation.navigate('Malmo')}
         >
-          Malmö
-        </Button>
-        <Button
-          style={styles.button}
+          <Text style={styles.button}>Malmö</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+
           title="Stockholm"
           onPress={() => navigation.navigate('Stockholm')}
         >
-          Stockholm
-        </Button>
+          <Text style={styles.button}>Stockholm</Text>
+        </TouchableOpacity>
       </View>
     </Appbar.Header>
   );
@@ -56,10 +56,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginLeft: 40
+    justifyContent: 'space-around',
+
   },
   button: {
-    color: 'white'
+    color: 'red',
+    marginLeft: 20,
+    fontSize: 20
   },
   logo: {
     borderRadius: 14,

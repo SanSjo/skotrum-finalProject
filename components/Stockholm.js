@@ -17,18 +17,18 @@ import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
 import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Comment } from './Comment';
+import { CommentPage } from './CommentPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { AppRegistry } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Callout } from './Callout';
+import getDirections from 'react-native-google-maps-directions'
+import Communications from 'react-native-communications'
+import { BottomNav } from './BottomNav'
 
 export const Stockholm = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
-
-  const [error, setError] = useState(null);
-  // const [openModal, setOpenModal] = useState(true);
 
   const _isMounted = useRef(true);
 
@@ -47,7 +47,7 @@ export const Stockholm = ({ navigation }) => {
   let mapRef = useRef(null);
 
   useEffect(() => {
-    fetch('https://babyrooms.herokuapp.com/findBabyRooms', { signal })
+    fetch('https://babyrooms.herokuapp.com/findBabyRooms/', { signal })
       .then(res => res.json())
       .then(json => {
         setIsLoading(false);
@@ -58,23 +58,17 @@ export const Stockholm = ({ navigation }) => {
     };
   }, []);
 
-  const handleCalloutPress = () => {
+  const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('Comment', {
-      title: markers.name
-    });
+    return navigation.navigate('DetailPage', selectedMarker);
   };
 
-  const getImageToShare = skotrumId => {
-    const skotrum = skotrum.find(room => room.id === skotrumId);
-    return skotrum.name && skotrum.address;
-  };
-
-  const onShare = async () => {
+  const onShare = async marker => {
+    console.log('marker', marker);
     try {
       const result = await Share.share({
-        message: 'Här finns det skötbord',
-        url: getImageToShare()
+        message: `Här finns det skötbord: ${marker.name} - ${marker.address}`,
+        url: marker.website
       });
 
       if (result.action === Share.sharedAction) {
@@ -91,12 +85,37 @@ export const Stockholm = ({ navigation }) => {
     }
   };
 
-  const goToCurrentLocation = () => {};
+  const makeCall = (phoneCall) => {
+    Communications.phonecall(phoneCall, true);
 
-  // const handleWebsitePress = webId => {
-  //   const webpage = markers.find(p => p.id === webId);
-  //   return Linking.openURL(webpage.website);
-  // };
+  }
+
+
+  const handleGetDirection = (marker) => {
+    console.log(marker)
+    const directionData = {
+      source: {
+        latitude: 0,
+        longitude: 0
+      },
+      destination: {
+        latitude: marker.latitude,
+        longitude: marker.longitude
+      },
+      params: [
+        {
+          key: "travelmode",
+          value: "walking"
+        },
+        {
+          key: 'travelmode',
+          value: 'driving'
+        }
+      ]
+    }
+    getDirections(directionData)
+
+  }
 
   return (
     <Container>
@@ -110,78 +129,82 @@ export const Stockholm = ({ navigation }) => {
         showsUserLocation={true}
         zoomControlEnabled={true}
         initialRegion={region}
-        showsMyLocationButton={true}
-        onCalloutPress={handleCalloutPress}
-      >
+        showsMyLocationButton={true}>
+
         {isLoading
           ? null
           : markers
-              .filter(marker => marker.latitude && marker.longitude)
-              .map((marker, index) => {
-                const coords = {
-                  latitude: marker.latitude,
-                  longitude: marker.longitude
-                };
+            .filter(marker => marker.latitude && marker.longitude)
+            .map((marker, index) => {
+              const coords = {
+                latitude: marker.latitude,
+                longitude: marker.longitude
+              };
 
-                return (
-                  <MapView.Marker
-                    key={index}
-                    coordinate={coords}
-                    title={marker.name}
-                  >
-                    <MapView.Callout
-                      style={styles.callout}
-                      navigation={navigation}
-                    >
-                      <View style={styles.container} key={marker._id}>
-                        <Text style={styles.textName}>{marker.name}</Text>
+              return (
+                <MapView.Marker
+                  key={index}
+                  coordinate={coords}
+                // title={marker.name}
+                // onCalloutPress={() => handleCalloutPress(marker)}
+                >
 
-                        <Text style={styles.phone}>
+                  <MapView.Callout style={styles.callout}>
+                    <View style={styles.container} key={marker._id}>
+                      <Text style={styles.textName}>{marker.name}</Text>
+
+                      <TouchableOpacity onPress={() => Communications.phonecall('0707171127', true)}>
+                        <View style={styles.phoneCall}>
                           <Icon name="phone" size={20} color="red" />
-                          {'  '}
-                          {marker.phone}
-                        </Text>
-                        <Text style={styles.adress}>
-                          <Icon
-                            style={styles.icon}
-                            name="envelope"
-                            size={15}
-                            color="red"
-                          />
-                          {'  '}
-                          {marker.address}
-                        </Text>
-                        <Text style={styles.note}>
-                          <Icon name="check" size={20} color="red" />{' '}
-                          {marker.note}
-                        </Text>
-
-                        {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
-                          <Text style={styles.text}> {marker.website}</Text>
-                        </TouchableOpacity> */}
-                        <View style={styles.buttonContainer}>
-                          <Button
-                            title="More info"
-                            onPress={() => navigation.navigate('Comment', {})}
-                          />
-                          <Button
-                            title="Share"
-                            onPress={() => onShare(marker.id)}
-                          />
+                          <Text style={styles.phone}> {' '}{marker.phone}</Text>
                         </View>
+                      </TouchableOpacity>
+                      <Text style={styles.adress}>
+                        <Icon
+                          style={styles.icon}
+                          name="envelope"
+                          size={15}
+                          color="red"
+                        />
+                        {'  '}
+                        {marker.address}
+                      </Text>
+                      <Text style={styles.note}>
+                        <Icon name="check" size={20} color="red" />{' '}
+                        {marker.note}
+                      </Text>
+
+                      <View style={styles.buttonContainer}>
+                        <MapView.CalloutSubview
+                          onPress={() => handleCalloutPress(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>MORE INFO</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                        <MapView.CalloutSubview
+                          onPress={() => onShare(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>SHARE</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                        <MapView.CalloutSubview
+                          onPress={() => handleGetDirection(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>DIRECTIONS</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
                       </View>
-                      {/* <Callout navigation={navigation} marker={marker} />*/}
-                    </MapView.Callout>
-                  </MapView.Marker>
-                );
-              })}
+                    </View>
+                    {/* <Callout navigation={navigation} marker={marker} />*/}
+                  </MapView.Callout>
+                </MapView.Marker>
+              );
+            })}
 
         {/* <Button
           title="Current Location"
           onPress={() => goToCurrentLocation()}
         ></Button> */}
       </MapView>
-    </Container>
+      <BottomNav />
+    </Container >
   );
 };
 
@@ -232,6 +255,14 @@ const styles = StyleSheet.create({
   },
   button: {
     color: 'black'
+  },
+  phoneCall: {
+    flexDirection: 'row'
+  },
+  calloutButton: {
+    color: 'black',
+    fontWeight: 'bold',
+    marginTop: 20
   }
 });
 
