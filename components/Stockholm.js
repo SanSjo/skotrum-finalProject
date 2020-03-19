@@ -148,12 +148,14 @@ export const Stockholm = ({ navigation }) => {
                     <View style={styles.container} key={marker._id}>
                       <Text style={styles.textName}>{marker.name}</Text>
 
-                      <TouchableOpacity onPress={() => Communications.phonecall('0707171127', true)}>
+                      <MapView.CalloutSubview
+                        onPress={() => Communications.phonecall(marker.phone, true)}>
                         <View style={styles.phoneCall}>
                           <Icon name="phone" size={20} color="red" />
                           <Text style={styles.phone}> {' '}{marker.phone}</Text>
                         </View>
-                      </TouchableOpacity>
+
+                      </MapView.CalloutSubview>
                       <Text style={styles.adress}>
                         <Icon
                           style={styles.icon}

@@ -1,34 +1,24 @@
 import React, { useState } from 'react';
 import { TextInput, Text, View, Button, StyleSheet } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export const CommentForm = (props) => {
   // const { message, like, createdAt, _id } = props.comments;
   const [comment, setComment] = useState('')
-
-
-
-  const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key, value) => {
-      if (typeof value === "object" && value !== null) {
-        if (seen.has(value)) {
-          return;
-        }
-        seen.add(value);
-      }
-      return value;
-    };
-  };
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault();
     fetch(`https://babyrooms.herokuapp.com/`, {
       method: "POST",
-      body: JSON.stringify(getCircularReplacer),
+      body: JSON.stringify({comment}),
       headers: { "Content-Type": "application/json" }
     })
       .then(() => {
         setComment('')
+        setEmail('')
+        setName('')
         props.onFormSubmit(comment)
       })
       .catch(error => {
@@ -40,20 +30,50 @@ export const CommentForm = (props) => {
 
 
     return (
-      <View>
-        <Text style={styles.text}>Let us know your thoughts</Text>
-        <TextInput
-          style={styles.input}
-          multiline
-          numberOfLines={3}
-          onChange={text => setComment(text)}
-        />
+      <View style={styles.container}>
+        <Text style={styles.text}>Let us know your thoughts. </Text>
+       
+       <View style={styles.inputContainer}>
+          <Text>Name:</Text>
+          <TextInput
+            style={styles.input}
+            multiline
+            numberOfLines={3}
+            onChangeText={text => setName(text)}
+          />
+       </View>
+        
 
-        <Button
+        <View style={styles.inputContainer}>
+          <Text>Email:</Text>
+          <TextInput
+            style={styles.input}
+            multiline
+            numberOfLines={3}
+            onChangeText={text => setEmail(text)}
+          />
+        </View>
+        
+
+        <View style={styles.inputContainer}>
+          <Text>Message:</Text>
+          <TextInput
+            style={styles.input}
+            multiline
+            numberOfLines={3}
+            onChangeText={text => setComment(text)}
+          />
+        </View>
+      
+       
+        <Text style={styles.textSmall}>Your shown message will be anonymous. </Text>
+        <View style={styles.buttonContainer}>
+        <TouchableHighlight style={styles.button}
           title="Send Comment"
           onPress={handleSubmit}
         //disabled={comment.length < 5 || comment.length > 140 ? true : false}
-        ></Button>
+        ><Text style={styles.buttonText}>Send comment</Text></TouchableHighlight>
+        </View>
 
         {/* <Text>{message}</Text> */}
       </View>
@@ -74,10 +94,35 @@ export const CommentForm = (props) => {
       fontSize: 20,
       paddingBottom: 10
     },
+    inputContainer: {
+      marginTop: 10
+    },
     input: {
       backgroundColor: 'white',
       width: 300,
-      height: 40
+      height: 40,
+      borderColor: 'black',
+      borderWidth: 1,
+      borderRadius: 16,
+   
+    },
+    textSmall: {
+      fontSize: 12
+    },
+    buttonContainer: {
+      alignItems: 'center'
+    },
+    button: {
+      backgroundColor: 'red',
+      alignItems: 'center',
+      width: 200,
+      borderRadius: 16,
+      margin: 20
+    },
+    buttonText: {
+      color: 'white',
+      padding: 10,
+     
     }
   });
 

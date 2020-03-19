@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Button, View, TextInput, Text, StyleSheet, Share } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Styled from 'styled-components/native';
-
+import { Card, ListItem } from 'react-native-elements'
 import { CommentForm } from './CommentForm';
 import { CommentHeader } from './CommentHeader';
 import { Comments } from './Comments'
 import { ScrollView } from 'react-native-gesture-handler';
+import moment from 'moment'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 export const CommentPage = () => {
   const [comments, setComments] = useState([]);
@@ -28,6 +30,7 @@ export const CommentPage = () => {
 
   const onFormSubmit = message => {
     setPostComment(message)
+
   }
 
   const onLiked = commentId => {
@@ -46,27 +49,56 @@ export const CommentPage = () => {
 
   return (
     <ScrollView>
-      <CommentHeader />
-      <>
+
+      <Card containerStyle={{ shadowColor: 'red', borderRadius: 16 }}>
         <View style={styles.container}>
           <CommentForm onFormSubmit={onFormSubmit} />
         </View>
         {comments.map(comment => (
-          <Comments key={comment._id} com={comment} onLiked={onLiked} />
+          <>
+            <View style={styles.messContainer}>
+              <View style={styles.message} key={comment._id}>
+                <Icon style={styles.icon} name="comment" size={30} color='red' />
+                <Text style={styles.commentText}>{comment.comment}</Text>
+
+              </View>
+              <View style={styles.time}>
+                <Text style={styles.timeText}>{moment(comment.createdAt).fromNow()}</Text>
+              </View>
+
+
+            </View>
+
+
+          </>
         ))}
-      </>
+      </Card>
       {/* <Button onPress={onShare} title="Share" /> */}
+
     </ScrollView>
   );
 };
 
 export default CommentPage;
-
+// <Comments key={comment._id} com={comment} onLiked={onLiked} />
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    marginTop: 20
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+
   },
+  messContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    backgroundColor: 'whitesmoke',
+    padding: 10,
+    borderRadius: 10,
+    height: 100,
+    width: 300
+
+  },
+
   text: {
     fontSize: 20,
     paddingBottom: 10
@@ -74,7 +106,41 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: 'white',
     width: 300,
-    height: 40
+    height: 40,
+
+  },
+  commentContainer: {
+    margin: 10,
+    padding: 5,
+    backgroundColor: 'grey',
+    width: 300,
+    borderRadius: 16,
+  },
+  message: {
+    flexDirection: 'row'
+
+  },
+  icon: {
+    marginLeft: 30
+  },
+  commentText: {
+    marginLeft: 20,
+    marginTop: 5,
+    fontWeight: 'bold',
+    fontSize: 18,
+    width: 200
+
+  },
+  time: {
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+
+
+  },
+  timeText: {
+
+    paddingRight: 20,
+    width: 120
   }
 });
 

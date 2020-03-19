@@ -7,7 +7,8 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Share
 } from 'react-native';
 import Styled from 'styled-components/native';
 import * as Location from 'expo-location';
@@ -15,8 +16,9 @@ import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { CommentPage } from './CommentPage';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { AppRegistry } from 'react-native';
+import { BottomNav } from './BottomNav'
 import { useNavigation } from '@react-navigation/native';
+import getDirections from 'react-native-google-maps-directions'
 
 export const Gbg = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +35,7 @@ export const Gbg = () => {
 
   const controller = new AbortController();
   const signal = controller.signal;
-
+  const navigation = useNavigation();
   let mapRef = useRef(null);
 
   useEffect(() => {
@@ -48,18 +50,63 @@ export const Gbg = () => {
     };
   }, []);
 
-  const handleCalloutPress = () => {
+  const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('CommentPage', {
-      name: 'name'
-    });
+    return navigation.navigate('DetailPage', selectedMarker);
   };
 
-  const handleWebsitePress = webId => {
-    const webpage = markers.find(p => p.id === webId);
-    return Linking.openURL(webpage.website);
+
+  // Share function called in Share button in CalloutSubView
+  const onShare = async marker => {
+    console.log('marker', marker);
+    try {
+      const result = await Share.share({
+        message: `Här finns det skötbord: ${marker.name} - ${marker.address}`,
+        url: marker.website
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
-  const navigation = useNavigation();
+
+  // Get direction function called in Dirucetion button in CalloutSubview
+
+  const handleGetDirection = (marker) => {
+    console.log(marker)
+    const directionData = {
+      source: {
+        latitude: 0,
+        longitude: 0
+      },
+      destination: {
+        latitude: marker.latitude,
+        longitude: marker.longitude
+      },
+      params: [
+        {
+          key: "travelmode",
+          value: "walking"
+        },
+        {
+          key: 'travelmode',
+          value: 'driving'
+        }
+      ]
+    }
+    getDirections(directionData)
+
+  }
+
   return (
     <Container>
       <Header navigation={navigation} />
@@ -89,32 +136,50 @@ export const Gbg = () => {
                   key={index}
                   coordinate={coords}
                   title={marker.name}
-                  onCalloutPress={handleCalloutPress}
                 >
                   <MapView.Callout styel={styles.callout}>
                     <View style={styles.container}>
                       <Text style={styles.textName}>{marker.name}</Text>
 
-                      <Text style={styles.phone}>
-                        <Icon name="phone" size={20} color="red" />
-                        {'  '}
-                        {marker.phone}
-                      </Text>
+                      <MapView.CalloutSubview
+                        onPress={() => Communications.phonecall(marker.phone, true)}>
+                        <View style={styles.phoneCall}>
+                          <Icon name="phone" size={20} color="red" />
+                          <Text style={styles.phone}> {' '}{marker.phone}</Text>
+                        </View>
+
+                      </MapView.CalloutSubview>
                       <Text style={styles.adress}>
-                        <Icon name="envelope" size={15} color="red" />{' '}
+                        <Icon
+                          style={styles.icon}
+                          name="envelope"
+                          size={15}
+                          color="red"
+                        />
+                        {'  '}
                         {marker.address}
                       </Text>
                       <Text style={styles.note}>
                         <Icon name="check" size={20} color="red" />{' '}
                         {marker.note}
                       </Text>
-                      {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
-                          <Text style={styles.text}> {marker.website}</Text>
-                        </TouchableOpacity> */}
-                      <Button
-                        title="More Info"
-                        onPress={() => handleCalloutPress()}
-                      />
+                      <View style={styles.buttonContainer}>
+                        <MapView.CalloutSubview
+                          onPress={() => handleCalloutPress(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>MORE INFO</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                        <MapView.CalloutSubview
+                          onPress={() => onShare(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>SHARE</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                        <MapView.CalloutSubview
+                          onPress={() => handleGetDirection(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>DIRECTIONS</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                      </View>
                     </View>
                   </MapView.Callout>
                 </MapView.Marker>
@@ -125,6 +190,7 @@ export const Gbg = () => {
           onPress={() => handleWebsitePress()}
         ></Button> */}
       </MapView>
+      <BottomNav />
     </Container>
   );
 };
@@ -167,5 +233,22 @@ const styles = StyleSheet.create({
     color: 'red',
     paddingBottom: 10
   },
-  icon: {}
+  callout: {
+    backgroundColor: 'transparent'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  button: {
+    color: 'black'
+  },
+  phoneCall: {
+    flexDirection: 'row'
+  },
+  calloutButton: {
+    color: 'black',
+    fontWeight: 'bold',
+    marginTop: 20
+  }
 });

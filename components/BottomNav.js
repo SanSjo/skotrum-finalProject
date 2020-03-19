@@ -28,11 +28,11 @@ export default BottomNav
 
 const styles = StyleSheet.create({
   bottomNav: {
-    height: 50,
+    height: 60,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'red'
+    backgroundColor: '#f64861'
   }
 })
 

@@ -16,8 +16,9 @@ import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { CommentPage } from './CommentPage';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { AppRegistry } from 'react-native';
+import { BottomNav } from './BottomNav'
 import { useNavigation } from '@react-navigation/native';
+import getDirections from 'react-native-google-maps-directions'
 
 export const Malmo = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,6 +35,7 @@ export const Malmo = () => {
 
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigation = useNavigation();
 
   let mapRef = useRef(null);
 
@@ -51,14 +53,10 @@ export const Malmo = () => {
 
   const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('CommentPage', selectedMarker);
+    return navigation.navigate('DetailPage', selectedMarker);
   };
 
-  // const handleWebsitePress = webId => {
-  //   const webpage = markers.find(p => p.id === webId);
-  //   return Linking.openURL(webpage.website);
-  // };
-
+  // Share function called in Share button in CalloutSubView
   const onShare = async marker => {
     console.log('marker', marker);
     try {
@@ -81,7 +79,34 @@ export const Malmo = () => {
     }
   };
 
-  const navigation = useNavigation();
+  // Get direction function called in Dirucetion button in CalloutSubview
+
+  const handleGetDirection = (marker) => {
+    console.log(marker)
+    const directionData = {
+      source: {
+        latitude: 0,
+        longitude: 0
+      },
+      destination: {
+        latitude: marker.latitude,
+        longitude: marker.longitude
+      },
+      params: [
+        {
+          key: "travelmode",
+          value: "walking"
+        },
+        {
+          key: 'travelmode',
+          value: 'driving'
+        }
+      ]
+    }
+    getDirections(directionData)
+
+  }
+
 
   return (
     <Container>
@@ -118,13 +143,21 @@ export const Malmo = () => {
                     <View style={styles.container}>
                       <Text style={styles.textName}>{marker.name}</Text>
 
-                      <Text style={styles.phone}>
-                        <Icon name="phone" size={20} color="red" />
-                        {'  '}
-                        {marker.phone}
-                      </Text>
+                      <MapView.CalloutSubview
+                        onPress={() => Communications.phonecall(marker.phone, true)}>
+                        <View style={styles.phoneCall}>
+                          <Icon name="phone" size={20} color="red" />
+                          <Text style={styles.phone}> {' '}{marker.phone}</Text>
+                        </View>
+
+                      </MapView.CalloutSubview>
                       <Text style={styles.adress}>
-                        <Icon name="envelope" size={15} color="red" />
+                        <Icon
+                          style={styles.icon}
+                          name="envelope"
+                          size={15}
+                          color="red"
+                        />
                         {'  '}
                         {marker.address}
                       </Text>
@@ -132,20 +165,21 @@ export const Malmo = () => {
                         <Icon name="check" size={20} color="red" />{' '}
                         {marker.note}
                       </Text>
-                      {/* <TouchableOpacity onPress={() => handleWebsitePress()}>
-                          <Text style={styles.text}> {marker.website}</Text>
-                        </TouchableOpacity> */}
                       <View style={styles.buttonContainer}>
                         <MapView.CalloutSubview
                           onPress={() => handleCalloutPress(marker)}
                         >
-                          <Text>MORE INFO</Text>
+                          <TouchableOpacity><Text style={styles.calloutButton}>MORE INFO</Text></TouchableOpacity>
                         </MapView.CalloutSubview>
-
                         <MapView.CalloutSubview
                           onPress={() => onShare(marker)}
                         >
-                          <Text>SHARE</Text>
+                          <TouchableOpacity><Text style={styles.calloutButton}>SHARE</Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                        <MapView.CalloutSubview
+                          onPress={() => handleGetDirection(marker)}
+                        >
+                          <TouchableOpacity><Text style={styles.calloutButton}>DIRECTIONS</Text></TouchableOpacity>
                         </MapView.CalloutSubview>
                       </View>
                     </View>
@@ -158,6 +192,7 @@ export const Malmo = () => {
           onPress={() => handleWebsitePress()}
         ></Button> */}
       </MapView>
+      <BottomNav />
     </Container>
   );
 };
@@ -195,10 +230,26 @@ const styles = StyleSheet.create({
     color: 'red',
     paddingBottom: 10
   },
-
   adress: {
     color: 'red',
     paddingBottom: 10
   },
-  icon: {}
+  callout: {
+    backgroundColor: 'transparent'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  button: {
+    color: 'black'
+  },
+  phoneCall: {
+    flexDirection: 'row'
+  },
+  calloutButton: {
+    color: 'black',
+    fontWeight: 'bold',
+    marginTop: 20
+  }
 });
