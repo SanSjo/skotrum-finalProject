@@ -5,7 +5,7 @@ import Communications from 'react-native-communications'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 
 
-export const InfoPage = () => {
+export const Info = () => {
 
   return (
     <View>

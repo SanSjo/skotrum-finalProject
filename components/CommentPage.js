@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, View, TextInput, Text, StyleSheet, Share } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Styled from 'styled-components/native';
-import { Card, ListItem } from 'react-native-elements'
+import { ListItem } from 'react-native-elements'
 import { CommentForm } from './CommentForm';
 import { CommentHeader } from './CommentHeader';
 import { Comments } from './Comments'
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Card, Avatar, IconButton } from 'react-native-paper'
 
 export const CommentPage = () => {
   const [comments, setComments] = useState([]);
@@ -50,29 +51,30 @@ export const CommentPage = () => {
   return (
     <ScrollView>
 
-      <Card containerStyle={{ shadowColor: 'red', borderRadius: 16 }}>
-        <View style={styles.container}>
-          <CommentForm onFormSubmit={onFormSubmit} />
-        </View>
-        {comments.map(comment => (
-          <>
-            <View style={styles.messContainer}>
-              <View style={styles.message} key={comment._id}>
-                <Icon style={styles.icon} name="comment" size={30} color='red' />
-                <Text style={styles.commentText}>{comment.comment}</Text>
-
-              </View>
-              <View style={styles.time}>
-                <Text style={styles.timeText}>{moment(comment.createdAt).fromNow()}</Text>
-              </View>
 
 
-            </View>
+
+      <View style={styles.container}>
+        <CommentForm onFormSubmit={onFormSubmit} />
+      </View>
+      {comments.map(comment => (
+        <>
+          <View style={styles.cardContainer}>
+            <Card.Title titleStyle={{ fontSize: 14, width: 300 }}
+              title={`${comment.comment}`}
+              subtitle={moment(comment.createdAt).fromNow()}
+              left={(props) => <Avatar.Icon style={{ backgroundColor: '#f64861' }} {...props} icon="message" />}
+
+            />
 
 
-          </>
-        ))}
-      </Card>
+          </View>
+
+
+        </>
+      ))}
+
+
       {/* <Button onPress={onShare} title="Share" /> */}
 
     </ScrollView>
@@ -97,6 +99,10 @@ const styles = StyleSheet.create({
     height: 100,
     width: 300
 
+  },
+  cardContainer: {
+    backgroundColor: 'white',
+    margin: 10
   },
 
   text: {
@@ -127,15 +133,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 5,
     fontWeight: 'bold',
-    fontSize: 18,
-    width: 200
+    fontSize: 1,
+    width: 100
 
   },
   time: {
     alignItems: "flex-end",
     justifyContent: "flex-end",
-
-
   },
   timeText: {
 
@@ -144,7 +148,29 @@ const styles = StyleSheet.create({
   }
 });
 
+{/* <Card containerStyle={{ shadowColor: 'red', borderRadius: 16 }}>
+  <View style={styles.container}>
+    <CommentForm onFormSubmit={onFormSubmit} />
+  </View>
+  {comments.map(comment => (
+    <>
+      <View style={styles.messContainer}>
+        <View style={styles.message} key={comment._id}>
+          <Icon style={styles.icon} name="comment" size={30} color='red' />
+          <Text style={styles.commentText}>{comment.comment}</Text>
 
+        </View>
+        <View style={styles.time}>
+          <Text style={styles.timeText}>{moment(comment.createdAt).fromNow()}</Text>
+        </View>
+
+
+      </View>
+
+
+    </>
+  ))}
+</Card> */}
 
 
 /////////////

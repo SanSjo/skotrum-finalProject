@@ -13,19 +13,23 @@ import { Stockholm } from './components/Stockholm';
 import { Malmo } from './components/Malmo';
 import { Gbg } from './components/Gbg';
 import { InfoModal } from './components/InfoModal';
-import { DetailPage } from './components/DetailPage'
-import { InfoPage } from './components/InfoPage'
+import { Detail } from './components/Detail'
+import { Info } from './components/Info'
+
 
 const Container = Styled.View`
     height: 200px;
     width: 200px;
 `;
 
+
+
 const Stack = createStackNavigator();
 
 const MyStack = () => {
   return (
     <Stack.Navigator>
+
       <Stack.Screen
         image="../assets/logomini.app.jpg"
         name="Stockholm"
@@ -34,8 +38,8 @@ const MyStack = () => {
       <Stack.Screen name="Malmo" component={Malmo} />
       <Stack.Screen name="CommentPage" component={CommentPage} />
       <Stack.Screen name="Gbg" component={Gbg} />
-      <Stack.Screen name="DetailPage" component={DetailPage} />
-      <Stack.Screen name="InfoPage" component={InfoPage} />
+      <Stack.Screen name="Detail" component={Detail} />
+      <Stack.Screen name="Info" component={Info} />
 
       {/* <Stack.Screen name="InfoModal" component={InfoModal} /> */}
 
@@ -43,7 +47,12 @@ const MyStack = () => {
   );
 };
 
+
+
+
 export const App = () => {
+
+
   return (
     <NavigationContainer>
       <MyStack />

@@ -11,7 +11,7 @@ export const BottomNav = () => {
   return (
     <View>
       <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => navigation.navigate('InfoPage')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Info')}>
           <Icon name="info-circle" size={30} color="white" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('CommentPage')}>

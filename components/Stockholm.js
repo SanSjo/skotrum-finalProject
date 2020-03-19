@@ -60,7 +60,7 @@ export const Stockholm = ({ navigation }) => {
 
   const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('DetailPage', selectedMarker);
+    return navigation.navigate('Detail', selectedMarker);
   };
 
   const onShare = async marker => {
@@ -146,7 +146,19 @@ export const Stockholm = ({ navigation }) => {
 
                   <MapView.Callout style={styles.callout}>
                     <View style={styles.container} key={marker._id}>
-                      <Text style={styles.textName}>{marker.name}</Text>
+                      <View style={styles.topCallout}>
+                        <Text style={styles.textName}>{marker.name}</Text>
+                        <MapView.CalloutSubview
+                          onPress={() => onShare(marker)}
+                        >
+                          <TouchableOpacity><Icon
+                            style={styles.icon}
+                            name="share"
+                            size={20}
+                            color="red"
+                          /><Text style={styles.calloutButton}></Text></TouchableOpacity>
+                        </MapView.CalloutSubview>
+                      </View>
 
                       <MapView.CalloutSubview
                         onPress={() => Communications.phonecall(marker.phone, true)}>
@@ -175,18 +187,15 @@ export const Stockholm = ({ navigation }) => {
                         <MapView.CalloutSubview
                           onPress={() => handleCalloutPress(marker)}
                         >
-                          <TouchableOpacity><Text style={styles.calloutButton}>MORE INFO</Text></TouchableOpacity>
+                          <TouchableOpacity><Text style={styles.calloutButton}>MER INFO</Text></TouchableOpacity>
                         </MapView.CalloutSubview>
-                        <MapView.CalloutSubview
-                          onPress={() => onShare(marker)}
-                        >
-                          <TouchableOpacity><Text style={styles.calloutButton}>SHARE</Text></TouchableOpacity>
-                        </MapView.CalloutSubview>
+
                         <MapView.CalloutSubview
                           onPress={() => handleGetDirection(marker)}
                         >
-                          <TouchableOpacity><Text style={styles.calloutButton}>DIRECTIONS</Text></TouchableOpacity>
+                          <TouchableOpacity><Text style={styles.calloutButton}>VÄGBESKRIVNING</Text></TouchableOpacity>
                         </MapView.CalloutSubview>
+
                       </View>
                     </View>
                     {/* <Callout navigation={navigation} marker={marker} />*/}
@@ -218,7 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     width: 270,
-    height: 170
+    height: 190
   },
   textName: {
     color: 'red',
@@ -260,6 +269,10 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     marginTop: 20
+  },
+  topCallout: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });
 

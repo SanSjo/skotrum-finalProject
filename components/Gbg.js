@@ -52,7 +52,7 @@ export const Gbg = () => {
 
   const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('DetailPage', selectedMarker);
+    return navigation.navigate('Detail', selectedMarker);
   };
 
 

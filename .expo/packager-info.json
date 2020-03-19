@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 63587,
-  "expoServerNgrokUrl": "https://ep-apj.anonymous.skotrum-finalproject.exp.direct",
-  "packagerNgrokUrl": "https://packager.ep-apj.anonymous.skotrum-finalproject.exp.direct",
-  "ngrokPid": 63606,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }

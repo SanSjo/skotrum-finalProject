@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
-import { TextInput, Text, View, Button, StyleSheet } from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import { TextInput, Text, View, Button, StyleSheet, Input } from 'react-native';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 export const CommentForm = (props) => {
   // const { message, like, createdAt, _id } = props.comments;
   const [comment, setComment] = useState('')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     fetch(`https://babyrooms.herokuapp.com/`, {
       method: "POST",
       body: JSON.stringify({comment}),
       headers: { "Content-Type": "application/json" }
     })
+   
       .then(() => {
         setComment('')
-        setEmail('')
-        setName('')
         props.onFormSubmit(comment)
       })
       .catch(error => {
@@ -31,14 +29,15 @@ export const CommentForm = (props) => {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Let us know your thoughts. </Text>
-       
+        <Text style={styles.text}>Tyck till om Skötrumskartan</Text>
+{/*        
        <View style={styles.inputContainer}>
-          <Text>Name:</Text>
+          <Text>Namn:</Text>
           <TextInput
             style={styles.input}
             multiline
             numberOfLines={3}
+            value={name}
             onChangeText={text => setName(text)}
           />
        </View>
@@ -50,13 +49,14 @@ export const CommentForm = (props) => {
             style={styles.input}
             multiline
             numberOfLines={3}
+            value={email}
             onChangeText={text => setEmail(text)}
           />
-        </View>
+        </View> */}
         
 
         <View style={styles.inputContainer}>
-          <Text>Message:</Text>
+          <Text>Meddelande:</Text>
           <TextInput
             style={styles.input}
             multiline
@@ -66,23 +66,20 @@ export const CommentForm = (props) => {
         </View>
       
        
-        <Text style={styles.textSmall}>Your shown message will be anonymous. </Text>
+        <Text style={styles.textSmall}>Ditt meddelande kommer visas anonymt </Text>
         <View style={styles.buttonContainer}>
-        <TouchableHighlight style={styles.button}
+        <TouchableOpacity style={styles.button}
           title="Send Comment"
           onPress={handleSubmit}
         //disabled={comment.length < 5 || comment.length > 140 ? true : false}
-        ><Text style={styles.buttonText}>Send comment</Text></TouchableHighlight>
+          ><Text>SKICKA</Text></TouchableOpacity>
         </View>
 
-        {/* <Text>{message}</Text> */}
       </View>
     );
   };
 
   export default CommentForm
-
-
 
 
   const styles = StyleSheet.create({
@@ -92,7 +89,8 @@ export const CommentForm = (props) => {
     },
     text: {
       fontSize: 20,
-      paddingBottom: 10
+      paddingBottom: 10,
+      fontWeight: 'bold'
     },
     inputContainer: {
       marginTop: 10
@@ -104,24 +102,31 @@ export const CommentForm = (props) => {
       borderColor: 'black',
       borderWidth: 1,
       borderRadius: 16,
-   
+      paddingTop: 8,
+      paddingLeft: 10,
+      justifyContent: "center",
+      fontSize: 18
     },
     textSmall: {
-      fontSize: 12
+      fontSize: 12,
+      width: 250
     },
     buttonContainer: {
       alignItems: 'center'
     },
     button: {
-      backgroundColor: 'red',
-      alignItems: 'center',
+      backgroundColor: '#f64861',
+      alignItems: "center",
+      justifyContent: 'center',
       width: 200,
+      height: 50,
       borderRadius: 16,
       margin: 20
     },
     buttonText: {
       color: 'white',
       padding: 10,
+      fontSize: 20
      
     }
   });

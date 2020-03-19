@@ -53,7 +53,7 @@ export const Malmo = () => {
 
   const handleCalloutPress = (selectedMarker) => {
     controller.abort();
-    return navigation.navigate('DetailPage', selectedMarker);
+    return navigation.navigate('Detail', selectedMarker);
   };
 
   // Share function called in Share button in CalloutSubView
