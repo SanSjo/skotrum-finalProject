@@ -1,17 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  Text,
-  Button,
-  StyleSheet,
-  TouchableOpacity
-} from 'react-native';
-import styled from 'styled-components';
-import { Gbg } from './Gbg';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Appbar } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const Header = () => {
   const navigation = useNavigation();
@@ -24,21 +14,18 @@ export const Header = () => {
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-
           title="Göteborg"
           onPress={() => navigation.navigate('Gbg')}
         >
           <Text style={styles.button}>Göteborg</Text>
         </TouchableOpacity>
         <TouchableOpacity
-
           title="Malmö"
           onPress={() => navigation.navigate('Malmo')}
         >
           <Text style={styles.button}>Malmö</Text>
         </TouchableOpacity>
         <TouchableOpacity
-
           title="Stockholm"
           onPress={() => navigation.navigate('Stockholm')}
         >
@@ -56,8 +43,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-
+    justifyContent: 'space-around'
   },
   button: {
     color: 'red',

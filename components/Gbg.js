@@ -1,24 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { AnimatedRegion } from 'react-native-maps';
-import {
-  Text,
-  View,
-  Image,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Share
-} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Share } from 'react-native';
 import Styled from 'styled-components/native';
-import * as Location from 'expo-location';
 import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { CommentPage } from './CommentPage';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { BottomNav } from './BottomNav'
+import { BottomNav } from './BottomNav';
 import { useNavigation } from '@react-navigation/native';
-import getDirections from 'react-native-google-maps-directions'
+import getDirections from 'react-native-google-maps-directions';
 
 export const Gbg = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,11 +38,10 @@ export const Gbg = () => {
     };
   }, []);
 
-  const handleCalloutPress = (selectedMarker) => {
+  const handleCalloutPress = selectedMarker => {
     controller.abort();
     return navigation.navigate('Detail', selectedMarker);
   };
-
 
   // Share function called in Share button in CalloutSubView
   const onShare = async marker => {
@@ -81,8 +68,8 @@ export const Gbg = () => {
 
   // Get direction function called in Dirucetion button in CalloutSubview
 
-  const handleGetDirection = (marker) => {
-    console.log(marker)
+  const handleGetDirection = marker => {
+    console.log(marker);
     const directionData = {
       source: {
         latitude: 0,
@@ -94,18 +81,17 @@ export const Gbg = () => {
       },
       params: [
         {
-          key: "travelmode",
-          value: "walking"
+          key: 'travelmode',
+          value: 'walking'
         },
         {
           key: 'travelmode',
           value: 'driving'
         }
       ]
-    }
-    getDirections(directionData)
-
-  }
+    };
+    getDirections(directionData);
+  };
 
   return (
     <Container>
@@ -124,71 +110,86 @@ export const Gbg = () => {
         {isLoading
           ? null
           : markers
-            .filter(marker => marker.latitude && marker.longitude)
-            .map((marker, index) => {
-              const coords = {
-                latitude: marker.latitude,
-                longitude: marker.longitude
-              };
+              .filter(marker => marker.latitude && marker.longitude)
+              .map((marker, index) => {
+                const coords = {
+                  latitude: marker.latitude,
+                  longitude: marker.longitude
+                };
 
-              return (
-                <MapView.Marker
-                  key={index}
-                  coordinate={coords}
-                  title={marker.name}
-                >
-                  <MapView.Callout styel={styles.callout}>
-                    <View style={styles.container}>
-                      <Text style={styles.textName}>{marker.name}</Text>
-
-                      <MapView.CalloutSubview
-                        onPress={() => Communications.phonecall(marker.phone, true)}>
-                        <View style={styles.phoneCall}>
-                          <Icon name="phone" size={20} color="red" />
-                          <Text style={styles.phone}> {' '}{marker.phone}</Text>
+                return (
+                  <MapView.Marker
+                    key={index}
+                    coordinate={coords}
+                    title={marker.name}
+                  >
+                    <MapView.Callout styel={styles.callout}>
+                      <View style={styles.container}>
+                        <View style={styles.topCallout}>
+                          <Text style={styles.textName}>{marker.name}</Text>
+                          <MapView.CalloutSubview
+                            onPress={() => onShare(marker)}
+                          >
+                            <TouchableOpacity>
+                              <Icon
+                                style={styles.icon}
+                                name="share"
+                                size={20}
+                                color="red"
+                              />
+                              <Text style={styles.calloutButton}></Text>
+                            </TouchableOpacity>
+                          </MapView.CalloutSubview>
                         </View>
 
-                      </MapView.CalloutSubview>
-                      <Text style={styles.adress}>
-                        <Icon
-                          style={styles.icon}
-                          name="envelope"
-                          size={15}
-                          color="red"
-                        />
-                        {'  '}
-                        {marker.address}
-                      </Text>
-                      <Text style={styles.note}>
-                        <Icon name="check" size={20} color="red" />{' '}
-                        {marker.note}
-                      </Text>
-                      <View style={styles.buttonContainer}>
                         <MapView.CalloutSubview
-                          onPress={() => handleCalloutPress(marker)}
+                          onPress={() =>
+                            Communications.phonecall(marker.phone, true)
+                          }
                         >
-                          <TouchableOpacity><Text style={styles.calloutButton}>MORE INFO</Text></TouchableOpacity>
+                          <View style={styles.phoneCall}>
+                            <Icon name="phone" size={20} color="red" />
+                            <Text style={styles.phone}> {marker.phone}</Text>
+                          </View>
                         </MapView.CalloutSubview>
-                        <MapView.CalloutSubview
-                          onPress={() => onShare(marker)}
-                        >
-                          <TouchableOpacity><Text style={styles.calloutButton}>SHARE</Text></TouchableOpacity>
-                        </MapView.CalloutSubview>
-                        <MapView.CalloutSubview
-                          onPress={() => handleGetDirection(marker)}
-                        >
-                          <TouchableOpacity><Text style={styles.calloutButton}>DIRECTIONS</Text></TouchableOpacity>
-                        </MapView.CalloutSubview>
+                        <Text style={styles.adress}>
+                          <Icon
+                            style={styles.icon}
+                            name="envelope"
+                            size={15}
+                            color="red"
+                          />
+                          {'  '}
+                          {marker.address}
+                        </Text>
+                        <Text style={styles.note}>
+                          <Icon name="check" size={20} color="red" />{' '}
+                          {marker.note}
+                        </Text>
+                        <View style={styles.buttonContainer}>
+                          <MapView.CalloutSubview
+                            onPress={() => handleCalloutPress(marker)}
+                          >
+                            <TouchableOpacity>
+                              <Text style={styles.calloutButton}>MER INFO</Text>
+                            </TouchableOpacity>
+                          </MapView.CalloutSubview>
+
+                          <MapView.CalloutSubview
+                            onPress={() => handleGetDirection(marker)}
+                          >
+                            <TouchableOpacity>
+                              <Text style={styles.calloutButton}>
+                                VÄGBESKRIVNING
+                              </Text>
+                            </TouchableOpacity>
+                          </MapView.CalloutSubview>
+                        </View>
                       </View>
-                    </View>
-                  </MapView.Callout>
-                </MapView.Marker>
-              );
-            })}
-        {/* <Button
-          title="Current Location"
-          onPress={() => handleWebsitePress()}
-        ></Button> */}
+                    </MapView.Callout>
+                  </MapView.Marker>
+                );
+              })}
       </MapView>
       <BottomNav />
     </Container>
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     width: 270,
-    height: 170
+    height: 190
   },
   textName: {
     color: 'red',
@@ -250,5 +251,9 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     marginTop: 20
+  },
+  topCallout: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });

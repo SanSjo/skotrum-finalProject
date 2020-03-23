@@ -1,22 +1,22 @@
-import React from 'react'
-import { StyleSheet, Text, View, Footer, Button } from 'react-native'
-import moment from 'moment'
-import { ListItem } from 'react-native-elements'
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import moment from 'moment';
+import { ListItem } from 'react-native-elements';
 
-export const Comments = (props) => {
-  const { comment, like, createdAt, _id } = props.com
+export const Comments = props => {
+  const { comment, like, createdAt, _id } = props.com;
 
   const handleClick = () => {
     fetch(`https://babyrooms.herokuapp.com/${_id}/like`, {
       method: 'POST',
-      body: "",
+      body: '',
       headers: { 'Content-Type': 'application/json' }
-    }).then(() => props.onLiked(_id))
-  }
+    }).then(() => props.onLiked(_id));
+  };
 
   return (
     <>
-      <View style={styles.commentContainer}>
+      <View>
         <ListItem key={_id} title={comment} />
         <ListItem title={moment(createdAt).fromNow()} />
       </View>
@@ -37,12 +37,10 @@ export const Comments = (props) => {
     //   </View>
 
     // </View>
+  );
+};
 
-  )
-
-}
-
-export default Comments
+export default Comments;
 
 const styles = StyleSheet.create({
   container: {
@@ -59,10 +57,8 @@ const styles = StyleSheet.create({
   comment: {
     paddingBottom: 20
   },
-  created: {
-
-  },
+  created: {},
   createdAt: {
     justifyContent: 'flex-end'
   }
-})
+});

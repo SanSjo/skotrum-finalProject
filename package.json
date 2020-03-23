@@ -22,6 +22,7 @@
     "mapbox-gl": "^1.8.1",
     "moment": "^2.24.0",
     "mongoose": "^5.9.3",
+    "native-base": "^2.13.12",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-hook-google-maps": "0.0.3",

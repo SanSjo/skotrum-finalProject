@@ -1,35 +1,57 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { Card, ListItem, Button, Icon, TouchableOpacity } from 'react-native-elements'
-import Communications from 'react-native-communications'
-import { TouchableHighlight } from 'react-native-gesture-handler'
-
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { Card, Icon, TouchableOpacity } from 'react-native-elements';
+import Communications from 'react-native-communications';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export const Info = () => {
-
   return (
     <View>
-      <Card containerStyle={{ borderRadius: 16, shadowColor: 'red' }}
+      <Card
+        containerStyle={{ borderRadius: 16, shadowColor: 'red' }}
         title="Om Skötrumskartan"
       >
-        <Text style={styles.header}>En skattkarta för föräldralediga</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>En skattkarta för föräldralediga</Text>
+        </View>
 
-        <Text style={styles.text}>Skötrumskartan är en karta över caféer och restauranger med skötbord i Stockholm, Göteborg och Malmö. </Text>
-        <Text style={styles.text}>Appen är perfekt för föräldrar med småbarn som vill ha ett bredare utbud av platser i stan där de kan hitta skötbord och som är barnvänliga. På Skötrumskartan finns främst restauranger och café- er men det går även att hitta andra ställen som museum och bibliotek.  </Text>
+        <Text style={styles.text}>
+          Skötrumskartan är en karta över caféer och restauranger med skötbord i
+          Stockholm, Göteborg och Malmö.{' '}
+        </Text>
+        <Text style={styles.text}>
+          Appen är perfekt för föräldrar med småbarn som vill ha ett bredare
+          utbud av platser i stan där de kan hitta skötbord och som är
+          barnvänliga. På Skötrumskartan finns främst restauranger och caféer
+          men det går även att hitta andra ställen som museum och bibliotek.{' '}
+        </Text>
 
         <View style={styles.buttonContainer}>
           <TouchableHighlight
-            onPress={() => Communications.email(['skotrumskartan@gmail.com'], null, null, 'subject', 'Fråga till skötrumskartan')}
-            icon={<Icon name='question' color='#ffffff' />}
-            style={styles.button}><Text style={styles.textButton}>Kontakta oss</Text>
+            onPress={() =>
+              Communications.email(
+                ['skotrumskartan@gmail.com'],
+                null,
+                null,
+                'Fråga till skötrumskartan',
+                null
+              )
+            }
+            icon={<Icon name="question" color="#ffffff" />}
+            style={styles.button}
+          >
+            <Text style={styles.textButton}>Kontakta oss</Text>
           </TouchableHighlight>
         </View>
       </Card>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    alignItems: 'center'
+  },
   header: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -38,8 +60,9 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 20,
-    fontSize: 18,
-    lineHeight: 25
+    fontSize: 14,
+    lineHeight: 25,
+    textAlign: 'justify'
   },
   buttonContainer: {
     alignItems: 'center'
@@ -55,7 +78,6 @@ const styles = StyleSheet.create({
     borderRadius: 16
   },
   textButton: {
-    color: 'white',
-
+    color: 'white'
   }
-})
+});

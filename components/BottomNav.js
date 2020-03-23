@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import BottomNavigation from 'react-native-material-bottom-navigation'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { NavigationContainer } from '@react-navigation/native'
-import { useNavigation } from '@react-navigation/native'
-
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { NavigationContainer } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 export const BottomNav = () => {
   const navigation = useNavigation();
@@ -17,14 +15,12 @@ export const BottomNav = () => {
         <TouchableOpacity onPress={() => navigation.navigate('CommentPage')}>
           <Icon name="comment" size={30} color="white" />
         </TouchableOpacity>
-
       </View>
     </View>
-  )
+  );
+};
 
-}
-
-export default BottomNav
+export default BottomNav;
 
 const styles = StyleSheet.create({
   bottomNav: {
@@ -34,54 +30,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f64861'
   }
-})
-
-// tab = [
-//   {
-//     key: 'info',
-//     icon: 'info',
-//     label: 'Info',
-//     barColor: 'pink',
-//     pressColor: 'black'
-//   },
-//   {
-//     key: 'message',
-//     icon: 'message',
-//     label: 'Comment',
-//     barColor: 'pink',
-//     pressColor: 'black'
-//   }
-// ]
-// state = {
-//   activeTab: 'info'
-// }
-
-
-// renderIcon = icon => ({ isActive }) => (
-//   <Icon size={24} color={white} name={icon} />
-// )
-
-// renderTab = ({ tab, isActive }) => {
-//   <FullTab
-//     isActive={isActive}
-//     key={tab.key}
-//     label={tab.label}
-//     renderIcon={this.renderIcon(tab.icon)}
-//   />
-
-// }
-
-
-// return (
-//   <View style={{ flex: 1 }}>
-//     <View style={{ flex: 1 }}>
-//       {/* Your screen contents depending on current tab. */}
-//     </View>
-//     <BottomNavigation
-//       activeTab={this.state.activeTab}
-//       onTabPress={newTab => this.setState({ activeTab: newTab.key })}
-//       renderTab={this.renderTab}
-//       tabs={this.tabs}
-//     />
-//   </View>
-// )
+});

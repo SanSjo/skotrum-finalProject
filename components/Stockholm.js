@@ -3,28 +3,19 @@ import MapView from 'react-native-maps';
 import {
   Text,
   View,
-  Image,
-  Button,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   Card,
   IconButton,
   Colors,
   Share
 } from 'react-native';
 import Styled from 'styled-components/native';
-import * as Location from 'expo-location';
 import { Header } from './Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { CommentPage } from './CommentPage';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { AppRegistry } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Callout } from './Callout';
-import getDirections from 'react-native-google-maps-directions'
-import Communications from 'react-native-communications'
-import { BottomNav } from './BottomNav'
+import getDirections from 'react-native-google-maps-directions';
+import Communications from 'react-native-communications';
+import { BottomNav } from './BottomNav';
 
 export const Stockholm = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +49,7 @@ export const Stockholm = ({ navigation }) => {
     };
   }, []);
 
-  const handleCalloutPress = (selectedMarker) => {
+  const handleCalloutPress = selectedMarker => {
     controller.abort();
     return navigation.navigate('Detail', selectedMarker);
   };
@@ -85,9 +76,8 @@ export const Stockholm = ({ navigation }) => {
     }
   };
 
-
-  const handleGetDirection = (marker) => {
-    console.log(marker)
+  const handleGetDirection = marker => {
+    console.log(marker);
     const directionData = {
       source: {
         latitude: 0,
@@ -99,18 +89,17 @@ export const Stockholm = ({ navigation }) => {
       },
       params: [
         {
-          key: "travelmode",
-          value: "walking"
+          key: 'travelmode',
+          value: 'walking'
         },
         {
           key: 'travelmode',
           value: 'driving'
         }
       ]
-    }
-    getDirections(directionData)
-
-  }
+    };
+    getDirections(directionData);
+  };
 
   return (
     <Container>
@@ -124,93 +113,91 @@ export const Stockholm = ({ navigation }) => {
         showsUserLocation={true}
         zoomControlEnabled={true}
         initialRegion={region}
-        showsMyLocationButton={true}>
-
+        showsMyLocationButton={true}
+      >
         {isLoading
           ? null
           : markers
-            .filter(marker => marker.latitude && marker.longitude)
-            .map((marker, index) => {
-              const coords = {
-                latitude: marker.latitude,
-                longitude: marker.longitude
-              };
+              .filter(marker => marker.latitude && marker.longitude)
+              .map((marker, index) => {
+                const coords = {
+                  latitude: marker.latitude,
+                  longitude: marker.longitude
+                };
 
-              return (
-                <MapView.Marker
-                  key={index}
-                  coordinate={coords}
-                // title={marker.name}
-                // onCalloutPress={() => handleCalloutPress(marker)}
-                >
-
-                  <MapView.Callout style={styles.callout}>
-                    <View style={styles.container} key={marker._id}>
-                      <View style={styles.topCallout}>
-                        <Text style={styles.textName}>{marker.name}</Text>
-                        <MapView.CalloutSubview
-                          onPress={() => onShare(marker)}
-                        >
-                          <TouchableOpacity><Icon
-                            style={styles.icon}
-                            name="share"
-                            size={20}
-                            color="red"
-                          /><Text style={styles.calloutButton}></Text></TouchableOpacity>
-                        </MapView.CalloutSubview>
-                      </View>
-
-                      <MapView.CalloutSubview
-                        onPress={() => Communications.phonecall(marker.phone, true)}>
-                        <View style={styles.phoneCall}>
-                          <Icon name="phone" size={20} color="red" />
-                          <Text style={styles.phone}> {' '}{marker.phone}</Text>
+                return (
+                  <MapView.Marker key={index} coordinate={coords}>
+                    <MapView.Callout style={styles.callout}>
+                      <View style={styles.container} key={marker._id}>
+                        <View style={styles.topCallout}>
+                          <Text style={styles.textName}>{marker.name}</Text>
+                          <MapView.CalloutSubview
+                            onPress={() => onShare(marker)}
+                          >
+                            <TouchableOpacity>
+                              <Icon
+                                style={styles.icon}
+                                name="share"
+                                size={20}
+                                color="red"
+                              />
+                              <Text style={styles.calloutButton}></Text>
+                            </TouchableOpacity>
+                          </MapView.CalloutSubview>
                         </View>
 
-                      </MapView.CalloutSubview>
-                      <Text style={styles.adress}>
-                        <Icon
-                          style={styles.icon}
-                          name="envelope"
-                          size={15}
-                          color="red"
-                        />
-                        {'  '}
-                        {marker.address}
-                      </Text>
-                      <Text style={styles.note}>
-                        <Icon name="check" size={20} color="red" />{' '}
-                        {marker.note}
-                      </Text>
-
-                      <View style={styles.buttonContainer}>
                         <MapView.CalloutSubview
-                          onPress={() => handleCalloutPress(marker)}
+                          onPress={() =>
+                            Communications.phonecall(marker.phone, true)
+                          }
                         >
-                          <TouchableOpacity><Text style={styles.calloutButton}>MER INFO</Text></TouchableOpacity>
+                          <View style={styles.phoneCall}>
+                            <Icon name="phone" size={20} color="red" />
+                            <Text style={styles.phone}> {marker.phone}</Text>
+                          </View>
                         </MapView.CalloutSubview>
+                        <Text style={styles.adress}>
+                          <Icon
+                            style={styles.icon}
+                            name="envelope"
+                            size={15}
+                            color="red"
+                          />
+                          {'  '}
+                          {marker.address}
+                        </Text>
+                        <Text style={styles.note}>
+                          <Icon name="check" size={20} color="red" />{' '}
+                          {marker.note}
+                        </Text>
 
-                        <MapView.CalloutSubview
-                          onPress={() => handleGetDirection(marker)}
-                        >
-                          <TouchableOpacity><Text style={styles.calloutButton}>VÄGBESKRIVNING</Text></TouchableOpacity>
-                        </MapView.CalloutSubview>
+                        <View style={styles.buttonContainer}>
+                          <MapView.CalloutSubview
+                            onPress={() => handleCalloutPress(marker)}
+                          >
+                            <TouchableOpacity>
+                              <Text style={styles.calloutButton}>MER INFO</Text>
+                            </TouchableOpacity>
+                          </MapView.CalloutSubview>
 
+                          <MapView.CalloutSubview
+                            onPress={() => handleGetDirection(marker)}
+                          >
+                            <TouchableOpacity>
+                              <Text style={styles.calloutButton}>
+                                VÄGBESKRIVNING
+                              </Text>
+                            </TouchableOpacity>
+                          </MapView.CalloutSubview>
+                        </View>
                       </View>
-                    </View>
-                    {/* <Callout navigation={navigation} marker={marker} />*/}
-                  </MapView.Callout>
-                </MapView.Marker>
-              );
-            })}
-
-        {/* <Button
-          title="Current Location"
-          onPress={() => goToCurrentLocation()}
-        ></Button> */}
+                    </MapView.Callout>
+                  </MapView.Marker>
+                );
+              })}
       </MapView>
       <BottomNav />
-    </Container >
+    </Container>
   );
 };
 
@@ -275,44 +262,3 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   }
 });
-
-// const [region, setRegion] = useState({
-//   latitude: 59.329323,
-//   longitude: 18.068581,
-//   latitudeDelta: 0.12,
-//   longitudeDelta: 0.12
-// });
-
-// useEffect(() => {
-//   navigator.geolocation.getCurrentPosition(
-//     position => {
-//       let region = {
-//         latitude: position.coord.latitude,
-//         longitude: position.coord.longitude,
-//         latitudeDelta: 10,
-//         longitudeDelta: 10
-//       };
-//       setRegion({
-//         initialRegion: region
-//       });
-
-//       ////////////
-//       // setLatitude(position.coords.latitude);
-//       // setLongitude(position.coords.longitude);
-
-//       // setError(null);
-//     },
-//     error => setError({ error: error.message }),
-//     { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 }
-//   );
-// });
-
-// onRegionChange = region => {
-//   setRegion({ region });
-// };
-
-// onMapReady = e => {
-//   if (!ready) {
-//     setReady(true);
-//   }
-// };
