@@ -1,6 +1,9 @@
 # skotrum-finalProject
 
-This project is a app called Skötrumskartan that shows on a map where the nearest nursing room are to the users location.
+This project is a app called Skötrumskartan that shows on a map where the nearest nursing room are in Stockholm, Göteborg and Malmö.  
+When onPress on the marker it shows a callout with name of place, phonenumber and statusinfo if the place has skötrum or a note if they don't. On the Callout there is buttons to show more info, directions and a arrow icon to be able to share the place.
+
+There is bottom navigation that navigate to a CommentPage and to a Info page with more info about the app.
 
 # Technology I used:
 This app is created in react native and the map is installed from the react-native-map package. 
